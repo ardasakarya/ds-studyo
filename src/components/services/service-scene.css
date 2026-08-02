@@ -1,0 +1,386 @@
+/* ------------------------------------------------------------------
+   Hizmet sahnesi — yan yana üç kutu, scroll ile içerikleri değişir
+   (referans: "GSAP pinned image mask reveal on scroll")
+
+   Varsayılan düzen ızgaradır (dar ekran / hareket azaltılmış / JS yok).
+   Sabitlenen sahne düzeni yalnızca medya sorgusuyla açılır — böylece
+   sunucudan gelen ilk boyama ile hidrasyon sonrası düzen AYNI olur;
+   sayfa sonradan uzayıp altındaki bölümleri kaydırmaz.
+
+   Sabitleme `position: sticky` ile yapılır (ScrollTrigger pin'i DOM'u
+   sarmaladığı için React ile sorun çıkarıyor).
+
+   Kartın bilgisi görselin üstünde durur: başlık her zaman görünür,
+   özet + fiyat + süre + eylem imleç kartın üstüne gelince (ya da klavye
+   odağında) cam panelde açılır. Dokunmatikte panel hep açıktır.
+------------------------------------------------------------------ */
+
+.svc-scene {
+  position: relative;
+  width: 100%;
+}
+
+.svc-scene-sticky {
+  position: relative;
+  width: 100%;
+}
+
+/* Sütunlar yalnızca sahne düzeninde kutu olur; ızgarada kartlar doğrudan
+   ızgaranın çocuğu gibi davransın diye `display: contents`. */
+.svc-col {
+  display: contents;
+}
+
+.svc-scene-row {
+  display: grid;
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+@media (min-width: 40em) {
+  .svc-scene-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64em) {
+  .svc-scene-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ---- Kart ---- */
+.svc-card {
+  min-width: 0;
+}
+
+.svc-card-link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Görselin üstündeki katman iki temada da koyu kalır: fotoğraf aydınlık
+   temada beyazlatılmaz, metin kum rengiyle okunur (bkz. globals .media-layer). */
+.svc-card-media {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background-color: var(--color-ink-800);
+  will-change: clip-path;
+  transition:
+    border-color 0.45s var(--ease-out-soft),
+    box-shadow 0.45s var(--ease-out-soft),
+    transform 0.45s var(--ease-out-soft);
+}
+
+.svc-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Kapak görselleri kartla aynı orana (4/5) sahip: tamamı çerçeveye sığar,
+     ortalanır, kırpılmaz. */
+  object-fit: contain;
+  object-position: 50% 50%;
+  transition:
+    scale 0.75s var(--ease-out-soft),
+    filter 0.55s var(--ease-out-soft);
+}
+
+/* Metnin okunduğu perde — koyu temada siyah, aydınlıkta kâğıt rengi */
+/* Kapağın iki tema sürümü: globals.css'teki genel kuralı `.svc-card-media img`
+   seçicisi ezdiği için burada daha güçlü seçiciyle tekrarlanır. */
+.svc-card-media img.scene-image-for-light-theme {
+  display: none;
+}
+
+:root[data-theme="light"] .svc-card-media img.scene-image-for-dark-theme {
+  display: none;
+}
+
+:root[data-theme="light"] .svc-card-media img.scene-image-for-light-theme {
+  display: block;
+}
+
+.svc-card-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgb(var(--scrim-rgb) / calc(0.92 * var(--scrim-strength))) 0%,
+    rgb(var(--scrim-rgb) / calc(0.62 * var(--scrim-strength))) 28%,
+    rgb(var(--scrim-rgb) / calc(0.16 * var(--scrim-strength))) 58%,
+    transparent 82%
+  );
+  opacity: 0.88;
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-out-soft);
+}
+
+.svc-card-no {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.9rem;
+  z-index: 2;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-ink-950) 62%, transparent);
+  padding: 0.2rem 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+  backdrop-filter: blur(6px);
+  transition:
+    border-color 0.45s var(--ease-out-soft),
+    color 0.45s var(--ease-out-soft);
+}
+
+/* ---- Görselin üstündeki bilgi paneli ---- */
+.svc-card-panel {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: clamp(1rem, 1.5vw, 1.35rem);
+  border-top: 1px solid transparent;
+  border-radius: 0 0 calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px);
+  transition:
+    background-color 0.5s var(--ease-out-soft),
+    backdrop-filter 0.5s var(--ease-out-soft),
+    border-color 0.5s var(--ease-out-soft);
+}
+
+.svc-card-title {
+  margin: 0;
+  font-size: clamp(1.2rem, 1.6vw, 1.65rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+}
+
+/* Dinlenme hâli: tek satır fiyat + süre. Hover'da yerini açılan panele
+   bıraktığı için yüksekliği de 1fr → 0fr ile kapanır. */
+.svc-card-rest {
+  display: grid;
+  grid-template-rows: 1fr;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+  transition:
+    grid-template-rows 0.5s var(--ease-out-soft),
+    opacity 0.3s var(--ease-out-soft);
+}
+
+.svc-card-rest > span {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Hover'da açılan blok — 0fr → 1fr ile yüksekliği yumuşak büyür */
+.svc-card-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.55s var(--ease-out-soft),
+    opacity 0.4s var(--ease-out-soft);
+}
+
+.svc-card-reveal > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.svc-card-summary {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--color-fg-muted);
+}
+
+.svc-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.5rem;
+  margin: 0;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.svc-card-meta dt {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+.svc-card-meta dd {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-fg);
+}
+
+.svc-card-action {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 0.4rem;
+  border-radius: 999px;
+  background: var(--color-accent);
+  padding: 0.5rem 0.95rem;
+  font-size: 0.82rem;
+  color: var(--color-ink-950);
+  transition:
+    background-color 0.3s ease,
+    transform 0.35s var(--ease-out-soft);
+}
+
+.svc-card-action svg {
+  transition: transform 0.35s var(--ease-out-soft);
+}
+
+/* ---- Hover / odak ---- */
+.svc-card-link:hover .svc-card-media,
+.svc-card-link:focus-visible .svc-card-media {
+  border-color: color-mix(in oklab, var(--color-accent) 45%, var(--color-line));
+  box-shadow:
+    0 26px 60px rgb(var(--shadow-rgb) / calc(0.32 * var(--shadow-strength))),
+    0 0 0 1px color-mix(in oklab, var(--color-accent) 14%, transparent);
+  transform: translateY(-6px);
+}
+
+.svc-card-link:hover .svc-card-media img,
+.svc-card-link:focus-visible .svc-card-media img {
+  scale: 1.045;
+  filter: saturate(1.05);
+}
+
+.svc-card-link:hover .svc-card-veil,
+.svc-card-link:focus-visible .svc-card-veil {
+  opacity: 1;
+}
+
+.svc-card-link:hover .svc-card-no,
+.svc-card-link:focus-visible .svc-card-no {
+  border-color: color-mix(in oklab, var(--color-accent) 45%, var(--color-line));
+  color: var(--color-fg);
+}
+
+.svc-card-link:hover .svc-card-panel,
+.svc-card-link:focus-visible .svc-card-panel {
+  background: color-mix(in oklab, var(--color-ink-950) 74%, transparent);
+  border-top-color: color-mix(in oklab, var(--color-accent) 32%, transparent);
+  backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.svc-card-link:hover .svc-card-reveal,
+.svc-card-link:focus-visible .svc-card-reveal {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* Fiyat satırı hover'da panelin içine (meta bloğuna) taşınır */
+.svc-card-link:hover .svc-card-rest,
+.svc-card-link:focus-visible .svc-card-rest {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.svc-card-link:hover .svc-card-action,
+.svc-card-link:focus-visible .svc-card-action {
+  background: var(--color-accent-soft);
+}
+
+.svc-card-link:hover .svc-card-action svg {
+  transform: translate(0.15rem, -0.15rem);
+}
+
+/* Dokunmatik: hover yok — panel hep açık dursun */
+@media (hover: none) {
+  .svc-card-reveal {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .svc-card-rest {
+    display: none;
+  }
+
+  .svc-card-panel {
+    background: color-mix(in oklab, var(--color-ink-950) 72%, transparent);
+    border-top-color: color-mix(in oklab, var(--color-accent) 24%, transparent);
+    backdrop-filter: blur(12px);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Sabitlenen sahne düzeni
+------------------------------------------------------------------ */
+@media (min-width: 64em) and (prefers-reduced-motion: no-preference) and
+  (scripting: enabled) {
+  .svc-scene {
+    height: calc(var(--pages, 1) * 100svh);
+  }
+
+  .svc-scene-sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+    padding: clamp(5.5rem, 11vh, 7rem) clamp(1.25rem, 4vw, 3.5rem)
+      clamp(1.75rem, 4vh, 3rem);
+  }
+
+  .svc-scene-row {
+    height: 100%;
+    gap: clamp(1rem, 2vw, 2rem);
+    padding-inline: 0;
+  }
+
+  .svc-col {
+    display: block;
+    position: relative;
+    min-width: 0;
+  }
+
+  /* Kartlar üst üste durur: yalnızca o an görünen kart tıklamayı alır.
+     `data-active` ServiceScene içinde scroll ilerlemesinden yazılır. */
+  .svc-card {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .svc-card[data-active="true"] {
+    pointer-events: auto;
+  }
+
+  /* Sahnede kart sütunu ekrandan uzun; görsel oranını koruyup ortalanır */
+  .svc-card-media {
+    margin-block: auto;
+  }
+}

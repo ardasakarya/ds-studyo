@@ -1,0 +1,164 @@
+/* ------------------------------------------------------------------
+   Hizmet sahnesi — sabitlenmiş görsel + maskeyle açılma
+   (referans: "GSAP pinned image mask reveal on scroll")
+
+   Üçlü gruplar hâlinde çalışır: grup boyunca sahne ekrana sabitlenir,
+   üstteki görsel aşağıdan yukarı silinerek altındaki görseli açar; görselin
+   ALTINDAKİ metin de aynı anda değişir.
+
+   Sabitleme için CSS `position: sticky` kullanılır (ScrollTrigger pin'i DOM'u
+   sarmaladığı için React ile sorun çıkarıyor). data-mode="static": JS yok ya
+   da hareket azaltılmış → görsel + metin blokları alt alta normal akışta.
+------------------------------------------------------------------ */
+
+.svc-reel {
+  position: relative;
+  width: 100%;
+}
+
+.svc-reel[data-mode="scroll"] {
+  height: calc(var(--steps, 3) * 100svh);
+}
+
+.svc-reel-sticky {
+  position: relative;
+  width: 100%;
+}
+
+.svc-reel[data-mode="scroll"] .svc-reel-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* ---- Tek hizmet: görsel + altında metin ---- */
+.svc-slide {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 2.5vh, 2rem);
+  width: 100%;
+}
+
+.svc-reel[data-mode="scroll"] .svc-slide {
+  position: absolute;
+  inset: 0;
+  padding: clamp(5.5rem, 11vh, 7.5rem) clamp(1.25rem, 4vw, 3.5rem)
+    clamp(1.5rem, 4vh, 3rem);
+}
+
+.svc-reel[data-mode="static"] .svc-slide + .svc-slide {
+  margin-top: clamp(3rem, 7vw, 5rem);
+}
+
+.svc-slide-media {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background-color: var(--color-ink-800);
+  will-change: clip-path;
+}
+
+.svc-reel[data-mode="scroll"] .svc-slide-media {
+  flex: 1;
+  min-height: 0;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1180px;
+}
+
+.svc-reel[data-mode="static"] .svc-slide-media {
+  aspect-ratio: 16 / 9;
+}
+
+.svc-slide-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 0px 50%;
+  will-change: object-position;
+}
+
+/* Görselin altına ince karartma — metinle arasında nefes payı */
+.svc-slide-media::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 38%;
+  background: linear-gradient(
+    to top,
+    rgb(var(--scrim-rgb) / calc(0.55 * var(--scrim-strength))),
+    transparent
+  );
+  pointer-events: none;
+}
+
+/* ---- Metin ---- */
+.svc-slide-copy {
+  display: flex;
+  width: 100%;
+  max-width: 1180px;
+  margin-inline: auto;
+  flex-direction: column;
+  gap: 0.75rem;
+  will-change: opacity, transform;
+}
+
+.svc-reel[data-mode="scroll"] .svc-slide-copy {
+  flex: none;
+  min-height: clamp(9rem, 22vh, 12rem);
+}
+
+.svc-slide-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 1.25rem;
+}
+
+.svc-slide-no {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+.svc-slide-title {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.4vw, 2.9rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+.svc-slide-summary {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--color-fg-muted);
+  line-height: 1.5;
+}
+
+.svc-slide-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 0.35rem;
+}
+
+.svc-slide-price {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+@media (max-width: 47.99em) {
+  .svc-slide-summary {
+    font-size: 0.95rem;
+  }
+}

@@ -1,0 +1,73 @@
+/* ------------------------------------------------------------------
+   Açılış animasyonunun marka harfleri.
+   İki parça ("MONO" | "LIT") küçük ve birbirine yakın başlar; yükselip
+   aralanırken büyür ve çapraz çerçeve tek noktadan açılır.
+   Başlangıç opaklığı 0 — JS çalışmazsa sahnenin önünü kapatmaz.
+------------------------------------------------------------------ */
+
+/* Blok, çerçeveyle AYNI dikey merkezde durur: görsel kelimenin tam
+   ortasından açılır (yazı görselin altında kalmaz). */
+.scene-intro {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  z-index: 40;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* İki yarım, birleşme noktası ekranın tam ortasına gelecek şekilde durur:
+   Marka adı başlangıçta bitişik tek kelimedir. Ölçek de bu noktadan
+   uygulanır (transform-origin), böylece büyürken araları açılmaz —
+   aralık yalnızca `x` ile bilerek açılır. */
+.scene-intro-half {
+  position: relative;
+  display: flex;
+  flex: 1;
+  will-change: transform;
+}
+
+.scene-intro-half:first-child {
+  justify-content: flex-end;
+  transform-origin: 100% 50%;
+}
+
+.scene-intro-half:last-child {
+  justify-content: flex-start;
+  transform-origin: 0% 50%;
+}
+
+/* Ortadaki "&": yerinden kıpırdamaz, kendi merkezinden ölçeklenir ve
+   açılan fotoğrafın altında kalıp söner. */
+.scene-intro-center {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+/* Harfler kendi genişliğinde durur. (Eşit paylaşımlı `flex:1` olunca 3
+   harfli "LIT" yarısı 4 harfli "MONO" yarısına göre çok aralıklı kalıyordu.) */
+.scene-intro-letter {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 0.06em;
+  font-family: var(--font-display);
+  font-size: 15vw;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  color: var(--color-fg);
+}
+
+.scene-intro-letter > span {
+  display: block;
+  will-change: transform;
+}

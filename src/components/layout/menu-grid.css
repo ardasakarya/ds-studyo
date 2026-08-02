@@ -1,0 +1,155 @@
+/* ------------------------------------------------------------------
+   Menü hover sahnesi (Codrops "HoverGrid" uyarlaması)
+   Menüdeki bir satırın üstüne gelince 10x10 ızgarada o sayfaya ait üç
+   görsel yön bazlı clip-path ile açılır; arkada düşük parlaklıkta bir
+   sahne görseli belirir.
+------------------------------------------------------------------ */
+
+.menu-stage {
+  position: relative;
+  display: grid;
+  grid-template-areas: "stage";
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+}
+
+/* Menünün tamamını kaplayan soluk arkaplan görseli */
+.menu-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.menu-backdrop-img {
+  position: absolute;
+  inset: -4%;
+  background-position: 50% 50%;
+  background-size: cover;
+  filter: brightness(0.3) saturate(0.6);
+  opacity: 0;
+  transition: opacity 700ms var(--ease-out-soft);
+}
+
+.menu-backdrop-img[data-on="true"] {
+  opacity: 1;
+}
+
+/* Metin okunurluğu için soldan sağa açılan perde */
+.menu-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgb(var(--scrim-rgb) / calc(0.86 * var(--scrim-strength))) 0%,
+    rgb(var(--scrim-rgb) / calc(0.62 * var(--scrim-strength))) 45%,
+    rgb(var(--scrim-rgb) / calc(0.42 * var(--scrim-strength))) 100%
+  );
+}
+
+/* Hiçbir satırın üstünde değilken görünen varsayılan blok */
+.menu-stage-idle {
+  position: relative;
+  z-index: 1;
+  grid-area: stage;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2.5rem;
+  pointer-events: none;
+}
+
+.menu-stage-idle h2 {
+  margin: 0;
+  font-size: clamp(2rem, 4.4vw, 4.2rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+  letter-spacing: -0.035em;
+  color: var(--color-fg);
+}
+
+.menu-stage-idle p {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--color-fg-muted);
+}
+
+/* Her menü satırının sahnesi.
+   Sahneler görünürlüğünü opaklıktan DEĞİL, görsellerin clip-path'inden alır:
+   kapalı clip-path varsayılan olarak CSS'te tanımlıdır (aşağıda), böylece
+   animasyon yarıda kesilse bile "açık kaldı / kapalı kaldı" durumu oluşmaz. */
+.menu-scene {
+  position: relative;
+  z-index: 0;
+  grid-area: stage;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Üstüne gelinen satırın sahnesi en üstte durur (React'ten gelir) */
+.menu-scene[data-current="true"] {
+  z-index: 1;
+}
+
+.menu-scene-title {
+  position: relative;
+  z-index: 10;
+  grid-area: 1 / 2 / -1 / -2;
+  display: grid;
+  align-content: center;
+  margin: 0;
+  font-size: clamp(1.5rem, 3.2vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--color-fg);
+  opacity: 0;
+  text-shadow: 0 6px 30px
+    rgb(var(--scrim-rgb) / calc(0.55 * var(--scrim-strength)));
+}
+
+.menu-scene-img {
+  position: relative;
+  overflow: hidden;
+  will-change: clip-path, filter;
+}
+
+/* Açılmamış görselin kapalı hâli — yön bazlı (GSAP buradan açar) */
+.menu-scene-img[data-dir="right"] {
+  clip-path: polygon(0% 0%, 0% 0%, 0% 100%, 0% 100%);
+}
+.menu-scene-img[data-dir="left"] {
+  clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
+}
+.menu-scene-img[data-dir="top"] {
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+}
+.menu-scene-img[data-dir="bottom"] {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+}
+
+.menu-scene-img > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-position: 50% 50%;
+  background-size: cover;
+}
+
+/* Sahne yalnızca imleçli geniş ekranlarda; dokunmatikte menü listesi tek başına. */
+@media (max-width: 63.99em), (hover: none) {
+  .menu-stage {
+    display: none;
+  }
+}

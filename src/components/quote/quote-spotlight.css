@@ -1,0 +1,255 @@
+/* ------------------------------------------------------------------
+   Teklif al — "spotlight" kapanışı
+   Dağınık duran hizmet etiketleri scroll ile merkezde birleşip tek bir
+   noktaya dönüşür, o nokta teklif butonuna açılır. Sabitleme (pin) için
+   CSS sticky kullanılır; GSAP yalnızca ilerlemeyi (progress) sürer.
+   data-mode="static": JS yok / hareket azaltılmış → düz, okunur blok.
+------------------------------------------------------------------ */
+
+.qs {
+  position: relative;
+  width: 100%;
+}
+
+.qs[data-mode="scroll"] {
+  height: 400svh;
+}
+
+.qs-sticky {
+  position: relative;
+  width: 100%;
+}
+
+.qs[data-mode="scroll"] .qs-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.qs-stage,
+.qs-header {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+}
+
+.qs-mesh {
+  position: absolute;
+  width: min(78vh, 92vw);
+  aspect-ratio: 1;
+  transform: scale(0.85);
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.qs-mesh img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Mesh beyaz çizgili: kâğıt zeminde kaybolmasın diye aydınlık temada
+   ters çevrilir (koyu çizgi) ve biraz belirginleştirilir. */
+:root[data-theme="light"] .qs-mesh {
+  opacity: 0.28;
+}
+
+:root[data-theme="light"] .qs-mesh img {
+  filter: invert(1);
+}
+
+.qs-title {
+  position: relative;
+  width: min(44ch, 86vw);
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.9rem, 4.4vw, 3.6rem);
+  text-wrap: balance;
+}
+
+.qs-header-content {
+  display: flex;
+  width: min(52ch, 88vw);
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-50px);
+  will-change: transform, opacity;
+}
+
+.qs-header-content p {
+  margin: 0;
+  color: var(--color-fg-muted);
+}
+
+.qs-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+/* ---- Dağınık hizmet etiketleri ---- */
+.qs-features {
+  position: absolute;
+  inset: 0;
+}
+
+.qs-feature {
+  position: absolute;
+  width: max-content;
+  height: max-content;
+  padding: 0.8rem 1.35rem;
+  transform: translate(-50%, -50%);
+  will-change: top, left;
+}
+
+.qs-feature-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  border: 0.125rem solid var(--color-line);
+  border-radius: 0.5rem;
+  background-color: var(--color-ink-800);
+  will-change: width, height, border-radius, border-width;
+}
+
+.qs-feature-content {
+  position: relative;
+  will-change: opacity;
+}
+
+.qs-feature-content p {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-fg-muted);
+}
+
+/* ---- Açılan teklif butonu ---- */
+.qs-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 3rem;
+  height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  overflow: hidden;
+  border: 0.35rem solid var(--color-line-strong);
+  border-radius: 25rem;
+  background-color: var(--color-ink-800);
+  padding-inline: 1.9rem;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  will-change: opacity, width, height, transform;
+  transition:
+    background-color 0.4s var(--ease-out-soft),
+    border-color 0.4s var(--ease-out-soft);
+}
+
+.qs-bar[data-ready="true"] {
+  pointer-events: auto;
+}
+
+.qs-bar:hover {
+  border-color: var(--color-accent-deep);
+  background-color: var(--color-ink-700);
+}
+
+.qs-bar p {
+  position: relative;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--color-accent);
+  opacity: 0;
+  will-change: opacity;
+}
+
+.qs-bar svg {
+  position: relative;
+  flex: none;
+  color: var(--color-accent);
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------------
+   Statik hâl — JS çalışmadığında ya da hareket azaltıldığında
+------------------------------------------------------------------ */
+.qs[data-mode="static"] {
+  padding-block: clamp(4.5rem, 9vw, 9rem);
+}
+
+.qs[data-mode="static"] .qs-sticky {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qs[data-mode="static"] .qs-stage,
+.qs[data-mode="static"] .qs-features {
+  display: none;
+}
+
+.qs[data-mode="static"] .qs-header {
+  position: static;
+  height: auto;
+  width: 100%;
+}
+
+.qs[data-mode="static"] .qs-header-content {
+  opacity: 1;
+  transform: none;
+}
+
+.qs[data-mode="static"] .qs-bar {
+  position: static;
+  width: auto;
+  height: auto;
+  margin-top: 2.25rem;
+  border-width: 1px;
+  padding-block: 1.05rem;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.qs[data-mode="static"] .qs-bar p,
+.qs[data-mode="static"] .qs-bar svg {
+  opacity: 1;
+}
+
+@media (max-width: 63.99em) {
+  .qs-feature {
+    padding: 0.7rem 1rem;
+  }
+
+  .qs-feature-content p {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+
+  .qs-mesh {
+    transform: scale(1.35);
+  }
+}

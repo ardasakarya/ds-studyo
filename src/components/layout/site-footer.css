@@ -1,0 +1,206 @@
+/* ------------------------------------------------------------------
+   Tam ekran footer (LukeBaffait animated footer uyarlaması)
+   Sayfa katmanı (.page-layer) z-1'de opak; footer altında sabit durur ve
+   sayfanın sonundaki 100svh'lik boşluk (.footer-revealer) onu açığa çıkarır.
+   Görseller ASCII karakterlere çevrilip canvas'a çizilir.
+------------------------------------------------------------------ */
+
+.footer-revealer {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100svh;
+  pointer-events: none;
+}
+
+.site-footer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  background-color: var(--color-ink-950);
+  color: var(--color-fg);
+}
+
+/* ---- ASCII eller ---- */
+.footer-images {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.footer-hand {
+  position: relative;
+  width: 40%;
+  min-width: 200px;
+  will-change: transform;
+}
+
+.footer-hand img {
+  display: block;
+  width: 100%;
+  opacity: 0;
+}
+
+.footer-hand canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- İçerik ---- */
+.footer-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: clamp(6rem, 12vh, 8.5rem) clamp(1.25rem, 4vw, 3.5rem)
+    clamp(1.25rem, 3vh, 2rem);
+}
+
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.footer-links a {
+  color: var(--color-fg);
+  font-size: 1.05rem;
+  transition: color 0.3s var(--ease-out-soft);
+}
+
+.footer-links a:hover {
+  color: var(--color-accent-soft);
+}
+
+.footer-blurb {
+  max-width: 30rem;
+  color: var(--color-fg-muted);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+/* Satır maskesi — SplitText yerine elle sarmalanmış satırlar */
+.footer-line {
+  display: block;
+  overflow: hidden;
+}
+
+.footer-line > * {
+  display: block;
+  will-change: transform;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  border-top: 1px solid var(--color-line);
+  padding-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+.footer-meta ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-meta a {
+  color: var(--color-fg-faint);
+  transition: color 0.3s var(--ease-out-soft);
+}
+
+.footer-meta a:hover {
+  color: var(--color-fg);
+}
+
+/* ---- Dev marka adı ---- */
+.footer-name {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-word {
+  display: block;
+  overflow: hidden;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 9vw, 8.5rem);
+  font-weight: 500;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.footer-word:last-child {
+  color: var(--color-fg-faint);
+}
+
+.footer-char {
+  display: inline-block;
+  position: relative;
+  will-change: transform;
+}
+
+@media (max-width: 63.99em) {
+  .footer-top {
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .footer-blurb {
+    max-width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .footer-name {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .footer-word {
+    font-size: clamp(2.4rem, 13vw, 4.5rem);
+  }
+
+  .footer-hand {
+    width: 62%;
+    min-width: 160px;
+    opacity: 0.75;
+  }
+}

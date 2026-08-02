@@ -1,0 +1,760 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------
+   Fontlar — self-hosted (public/fonts)
+   Display: Clash Display · Metin: Satoshi
+--------------------------------------------------------------- */
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/clash-display-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/clash-display-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Clash Display";
+  src: url("/fonts/clash-display-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/satoshi-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------
+   Tasarım token'ları — "Sand & Black"
+   Saf siyah zemin + soluk kum rengi tipografi. BEYAZ KULLANILMAZ;
+   görsel dil siyah ile kumun yüksek kontrastına dayanır.
+--------------------------------------------------------------- */
+@theme {
+  --font-display: "Clash Display", "Archivo Black", Anton, sans-serif;
+  --font-sans: "Satoshi", Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Zemin — SİTE BAŞTAN SONA TEK ARKAPLAN (--color-ink-950 = saf siyah).
+     Diğer tonlar yalnızca panel/kart/input yüzeyi içindir, bölüm ayırmak için
+     KULLANILMAZ. Bir bölümün zemini değişecekse tek tek istenerek değişir. */
+  --color-ink-950: #000000;
+  --color-ink-900: #0a0a0a;
+  --color-ink-850: #101010;
+  --color-ink-800: #131313; /* menü paneli / kart yüzeyi */
+  --color-ink-700: #1d1d1d;
+  --color-ink-600: #262626;
+
+  /* Çizgiler — kum renginin düşük opaklıklı halleri */
+  --color-line: #262316;
+  --color-line-strong: #4a452e;
+
+  /* Metin — hepsi kum ailesinden */
+  --color-fg: #e6ddaa;
+  --color-fg-muted: #a89f78;
+  --color-fg-faint: #6f6949;
+
+  /* Vurgu = kum. Buton: kum zemin + siyah metin. */
+  --color-accent: #e6ddaa;
+  --color-accent-soft: #f2ecc9;
+  --color-accent-deep: #8a8256;
+
+  /* Destek — spec'teki mavi tonları (yüzey/rozet için) */
+  --color-blue-dark: #101f32;
+  --color-blue: #1c2a3c;
+  --color-blue-light: #2b3d54;
+  --color-mint: #e6ddaa;
+  --color-sand: #e6ddaa;
+
+  /* Fotoğrafın ÜSTÜNDE duran metin — iki temada da kum rengi kalır.
+     Görselin üstü her zaman karartıldığı için tema ile değişmez. */
+  --color-media-fg: #e6ddaa;
+  --color-media-fg-muted: #b6ad84;
+
+  --radius-card: 10px;
+
+  --ease-out-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-scene: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-pulse-soft: pulse-soft 3.6s ease-in-out infinite;
+}
+
+/* ---------------------------------------------------------------
+   TEMA — koyu (varsayılan) / aydınlık
+   Aydınlık tema aynı token'ları yeniden tanımlar; bütün bölümler
+   yalnızca bu değişkenler üzerinden boyandığı için site baştan sona
+   tek düğmeyle döner. Fotoğrafların üstündeki metin (--color-media-fg)
+   iki temada da kum rengidir.
+--------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+
+  --scene-title-page: #e6ddaa;
+  /* Fotoğraf da temayla birlikte koyulaştığı için görsel üstü metin kum. */
+  --scene-title-media: #e6ddaa;
+
+  /* Görsel üstü perde ve gölge rengi — temaya göre değişir.
+     Koyu temada fotoğraf karartılır, aydınlık temada kâğıt rengiyle
+     soldurulur; metin her iki durumda da --color-fg ile okunur. */
+  --scrim-rgb: 0 0 0;
+  --scrim-strength: 1;
+  --shadow-rgb: 0 0 0;
+  --shadow-strength: 1;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --scene-title-page: #16150d;
+  /* Aydınlık temada fotoğraf da aydınlık: görsel üstü metin mürekkep. */
+  --scene-title-media: #16150d;
+
+  /* Zemin — kâğıt ailesinden. ink-950 yine "tek arkaplan". */
+  --color-ink-950: #f4f1e6;
+  --color-ink-900: #efebdc;
+  --color-ink-850: #eae5d0;
+  --color-ink-800: #e6e0c9; /* menü paneli / kart yüzeyi */
+  --color-ink-700: #ddd6ba;
+  --color-ink-600: #cdc5a1;
+
+  --color-line: #d9d2b6;
+  --color-line-strong: #ada471;
+
+  /* Metin — mürekkep ailesinden */
+  --color-fg: #16150d;
+  --color-fg-muted: #4a4634;
+  --color-fg-faint: #767052;
+
+  /* Vurgu = koyu zeytin-altın. Buton: vurgu zemin + kâğıt metin. */
+  --color-accent: #5a5120;
+  --color-accent-soft: #3a3411;
+  --color-accent-deep: #a89a5f;
+
+  --color-blue-dark: #d7dee6;
+  --color-blue: #c3cedb;
+  --color-blue-light: #aebdcd;
+  --color-mint: #5a5120;
+  --color-sand: #5a5120;
+
+  --scrim-rgb: 244 241 230;
+  --scrim-strength: 1;
+  --shadow-rgb: 60 55 30;
+  --shadow-strength: 0.55;
+}
+
+/* Aynı kompozisyonun iki ışık sürümü: koyu tema KOYU fotoğrafı,
+   aydınlık tema AYDINLIK fotoğrafı gösterir (görsel temayı takip eder). */
+.scene-image-for-light-theme {
+  display: none;
+}
+
+:root[data-theme="light"] .scene-image-for-dark-theme {
+  display: none;
+}
+
+:root[data-theme="light"] .scene-image-for-light-theme {
+  display: block;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes roll-in {
+  from {
+    transform: translate3d(0, 110%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes roll-in-up {
+  from {
+    transform: translate3d(0, -110%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes scene-copy-exit {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -115%, 0);
+  }
+}
+
+@keyframes scene-copy-exit-down {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 115%, 0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Yeni sahne scroll yönüne göre çerçevenin gerçek köşesinden açılır. */
+@keyframes scene-reveal-bottom-left {
+  from {
+    clip-path: inset(100% 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes scene-reveal-top-right {
+  from {
+    clip-path: inset(0 0 100% 100%);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.scene-reveal-bottom-left,
+.scene-reveal-top-right {
+  animation-duration: 900ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+  will-change: clip-path;
+}
+
+.scene-reveal-bottom-left {
+  animation-name: scene-reveal-bottom-left;
+}
+.scene-reveal-top-right {
+  animation-name: scene-reveal-top-right;
+}
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-ink-950);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.06;
+  }
+
+  /* Tüm sayfa tek zemin: bölümler kendi arkaplanını boyamaz */
+  section {
+    background-color: transparent;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-accent) 32%, transparent);
+    color: var(--color-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-ink-950);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-600);
+    border-radius: 99px;
+    border: 3px solid var(--color-ink-950);
+  }
+}
+
+@layer components {
+  /* Sayfa katmanı: sabit footer'ın üstünde duran opak yüzey */
+  .page-layer {
+    position: relative;
+    z-index: 1;
+    background-color: var(--color-ink-950);
+  }
+
+  /* Sayfa kabı — tüm bölümler bunu kullanır */
+  .shell {
+    width: 100%;
+    max-width: 1240px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+  }
+
+  .section {
+    position: relative;
+    padding-block: clamp(4.5rem, 9vw, 9rem);
+  }
+
+  /* Fotoğrafın üstünde duran katman.
+     Görsel iki temada da kendi hâliyle kalsın (aydınlıkta beyazlatılmasın)
+     diye perde SİYAH, metin de kum ailesine sabitlenir. Katmanın içindeki
+     bütün token'lar koyu palete döner. */
+  .media-layer {
+    --color-fg: var(--color-media-fg);
+    --color-fg-muted: var(--color-media-fg-muted);
+    --color-fg-faint: var(--color-media-fg-muted);
+    --color-accent: var(--color-media-fg);
+    --color-accent-soft: #f2ecc9;
+    --color-ink-950: #000000;
+    --color-ink-800: #131313;
+    --color-line: #3a3626;
+    --color-line-strong: #6f6949;
+    --scrim-rgb: 0 0 0;
+    --scrim-strength: 1;
+    color: var(--color-media-fg);
+  }
+
+  /* ---- Fotoğraf perdeleri ----
+     Koyu temada siyah, aydınlık temada kâğıt rengiyle örter; böylece
+     görselin üstündeki başlık iki temada da --color-fg ile okunur. */
+  .scrim-hero {
+    background: radial-gradient(
+      circle at 50% 42%,
+      transparent 18%,
+      rgb(var(--scrim-rgb) / calc(0.15 * var(--scrim-strength))) 55%,
+      rgb(var(--scrim-rgb) / calc(0.58 * var(--scrim-strength))) 100%
+    );
+  }
+
+  .scrim-hero-veil {
+    background: linear-gradient(
+      to bottom,
+      rgb(var(--scrim-rgb) / calc(0.28 * var(--scrim-strength))),
+      rgb(var(--scrim-rgb) / calc(0.06 * var(--scrim-strength))) 50%,
+      rgb(var(--scrim-rgb) / calc(0.55 * var(--scrim-strength)))
+    );
+  }
+
+  /* Perde artık temayı takip eder: koyu temada siyah (koyu fotoğrafın
+     üstünde), aydınlık temada kâğıt (aydınlık fotoğrafın üstünde). */
+
+  /* Anasayfa gezgininin kenar geçişleri: metnin okunmasına yetecek kadar,
+     fotoğrafı soldurmayacak kadar hafif. */
+  .scrim-top {
+    background: linear-gradient(
+      to bottom,
+      rgb(var(--scrim-rgb) / calc(0.34 * var(--scrim-strength))),
+      transparent
+    );
+  }
+
+  .scrim-bottom {
+    background: linear-gradient(
+      to top,
+      rgb(var(--scrim-rgb) / calc(0.44 * var(--scrim-strength))),
+      transparent
+    );
+  }
+
+  /* Ekip bölümündeki lanyard kutusu — tema token'larıyla boyanır */
+  .lanyard-panel {
+    border: 1px solid var(--color-line);
+    background:
+      radial-gradient(
+        circle at 50% 58%,
+        color-mix(in oklab, var(--color-accent) 9%, transparent),
+        transparent 31%
+      ),
+      linear-gradient(
+        145deg,
+        color-mix(in oklab, var(--color-ink-700) 40%, transparent),
+        color-mix(in oklab, var(--color-ink-900) 55%, transparent)
+      );
+    box-shadow: 0 35px 100px
+      rgb(var(--shadow-rgb) / calc(0.3 * var(--shadow-strength)));
+  }
+
+  /* Fotoğraf üstündeki başlığın hâlesi */
+  .media-halo {
+    text-shadow: 0 8px 35px
+      rgb(var(--scrim-rgb) / calc(0.55 * var(--scrim-strength)));
+  }
+
+  /* Bölüm üstü etiket */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-fg-faint);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-accent));
+  }
+
+  /* Kartlar tek zemin üzerinde "çerçeve" gibi durur, ayrı bir yüzey gibi değil */
+  .card {
+    position: relative;
+    background: color-mix(in oklab, var(--color-ink-800) 45%, transparent);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    transition:
+      border-color 0.4s var(--ease-out-soft),
+      background-color 0.4s var(--ease-out-soft),
+      transform 0.4s var(--ease-out-soft);
+  }
+  .card:hover {
+    border-color: var(--color-line-strong);
+    background: color-mix(in oklab, var(--color-ink-700) 70%, transparent);
+  }
+
+  /* Kartın üstünde ince ışık çizgisi */
+  .hairline-top::before {
+    content: "";
+    position: absolute;
+    inset-inline: 12%;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklab, var(--color-accent) 55%, transparent),
+      transparent
+    );
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-out-soft);
+  }
+  .card:hover.hairline-top::before {
+    opacity: 1;
+  }
+
+  /* Hizmet kartı: koyu yüzeyde tasarıma uyumlu, kontrollü altın ışık. */
+  .service-card {
+    isolation: isolate;
+    overflow: hidden;
+    box-shadow: 0 18px 55px
+      rgb(var(--shadow-rgb) / calc(0.12 * var(--shadow-strength)));
+    transition:
+      border-color 0.4s var(--ease-out-soft),
+      background-color 0.4s var(--ease-out-soft),
+      transform 0.4s var(--ease-out-soft),
+      box-shadow 0.45s var(--ease-out-soft);
+  }
+  .service-card > * {
+    position: relative;
+    z-index: 1;
+  }
+  .service-card::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    inset: -35%;
+    background: radial-gradient(
+      circle at 20% 10%,
+      color-mix(in oklab, var(--color-accent) 16%, transparent),
+      transparent 48%
+    );
+    opacity: 0;
+    transform: translate3d(-4%, 5%, 0);
+    transition:
+      opacity 0.45s var(--ease-out-soft),
+      transform 0.6s var(--ease-out-soft);
+    pointer-events: none;
+  }
+  .service-card:hover,
+  .service-card:focus-visible {
+    transform: translateY(-6px);
+    border-color: color-mix(in oklab, var(--color-accent) 38%, var(--color-line));
+    box-shadow:
+      0 24px 70px rgb(var(--shadow-rgb) / calc(0.28 * var(--shadow-strength))),
+      0 0 34px color-mix(in oklab, var(--color-accent) 10%, transparent);
+  }
+  .service-card:hover::after,
+  .service-card:focus-visible::after {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Arka plan dokuları */
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(
+      ellipse 80% 60% at 50% 0%,
+      #000 30%,
+      transparent 75%
+    );
+  }
+
+  .glow {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(120px);
+    pointer-events: none;
+  }
+
+  .text-gradient {
+    background: linear-gradient(
+      100deg,
+      var(--color-fg) 20%,
+      var(--color-accent-soft) 60%,
+      var(--color-fg-muted) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Scroll reveal — .is-in sınıfı JS'ten gelir (bkz. hooks/use-reveal.ts) */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    transition:
+      opacity 0.85s var(--ease-out-soft),
+      transform 0.85s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Satır satır açılan başlık (SplitText yok — maskeli span) */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-block: 0.06em;
+  }
+  .line-mask > span {
+    display: block;
+    transform: translate3d(0, 110%, 0);
+    transition: transform 1s var(--ease-out-soft);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .is-in .line-mask > span {
+    transform: none;
+  }
+
+  /* ---------------------------------------------------------------
+     Referans dilinden gelen tipografi (imperialebolgheri.com)
+     Dev, sıkı harf aralıklı, BÜYÜK HARF display + mono mikro etiketler
+  --------------------------------------------------------------- */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+    line-height: 0.86;
+  }
+
+  /* Anasayfa sahne başlığı: daha rafine, ince ve editorial display karakteri. */
+  .scene-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    line-height: 0.82;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    text-wrap: nowrap;
+    font-kerning: normal;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  /* Sahne başlığının sayfa ve fotoğraf üstündeki iki marka rengi. Fotoğraf
+     katmanı çerçeve tarafından kırpıldığı için renk sınırı çerçeveyi izler. */
+  .scene-title-page-color {
+    color: var(--scene-title-page);
+    text-shadow: none;
+  }
+
+  .scene-title-media-color {
+    color: var(--scene-title-media);
+    text-shadow: none;
+  }
+
+  /* Bölüm etiketi: BÖLÜM 03 */
+  .chapter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-fg-faint);
+  }
+  .chapter b {
+    font-weight: 400;
+    color: var(--color-accent);
+  }
+
+  /* Kenar notu / sayaç: 14px DM Mono, uppercase (spec) */
+  .edge-note {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+
+  /* Sahne claim'i: iki satırlık dar mono blok */
+  .claim {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.15;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-fg);
+    text-align: center;
+  }
+
+  /* Dikey roller geçişi (başlık, claim, sayaç) */
+  .roll {
+    display: block;
+    overflow: hidden;
+  }
+  .roll > * {
+    display: block;
+    animation: roll-in 0.95s var(--ease-scene) both;
+  }
+  .roll[data-dir="up"] > * {
+    animation-name: roll-in-up;
+  }
+
+  /* Metin, fotoğraf geçişinden hemen önce sahneden çıkar. */
+  .scene-copy-exit > * {
+    animation: scene-copy-exit 220ms cubic-bezier(0.55, 0, 1, 0.45) both !important;
+  }
+  .scene-copy-exit-down > * {
+    animation: scene-copy-exit-down 220ms cubic-bezier(0.55, 0, 1, 0.45) both !important;
+  }
+
+  /* Hafif eğik görsel kartı (referans sitedeki döndürülmüş fotoğraf) */
+  .tilt {
+    transform: rotate(-2.4deg);
+    transition: transform 0.9s var(--ease-out-soft);
+  }
+  .tilt:hover {
+    transform: rotate(0deg);
+  }
+
+  /* Sekme / adım geçişleri (AnimatePresence yerine saf CSS) */
+  .animate-fade-up {
+    animation: fade-up 0.55s var(--ease-out-soft) both;
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: var(--animate-marquee);
+  }
+  .marquee-mask {
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 10%,
+      #000 90%,
+      transparent
+    );
+  }
+}
+
+/* JS kapalıysa reveal içeriği gizli kalmasın */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .line-mask > span {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .line-mask > span {
+    transform: none;
+  }
+}

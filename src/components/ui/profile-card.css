@@ -1,0 +1,743 @@
+/* React Bits "ProfileCard" — holografik kimlik kartı.
+   Katmanlar orijinaliyle aynı; renkler siteye uyarlandı (siyah zemin + kum). */
+.pc-card-wrapper {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-from-center: 0;
+  --pointer-from-top: 0.5;
+  --pointer-from-left: 0.5;
+  --card-opacity: 0;
+  --rotate-x: 0deg;
+  --rotate-y: 0deg;
+  --background-x: 50%;
+  --background-y: 50%;
+  --grain: none;
+  --icon: none;
+  --behind-glow-color: rgba(230, 221, 170, 0.45);
+  --behind-glow-size: 45%;
+  --inner-gradient: linear-gradient(145deg, #1b2243 0%, #070b19 100%);
+  --sunpillar-1: #f3e8ba;
+  --sunpillar-2: #d7d3b4;
+  --sunpillar-3: #91aeb7;
+  --sunpillar-4: #c3d4d4;
+  --sunpillar-5: #7895a1;
+  --sunpillar-6: #e5dbad;
+  --sunpillar-clr-1: var(--sunpillar-1);
+  --sunpillar-clr-2: var(--sunpillar-2);
+  --sunpillar-clr-3: var(--sunpillar-3);
+  --sunpillar-clr-4: var(--sunpillar-4);
+  --sunpillar-clr-5: var(--sunpillar-5);
+  --sunpillar-clr-6: var(--sunpillar-6);
+  --card-radius: 26px;
+
+  position: relative;
+  perspective: 500px;
+  transform: translate3d(0, 0, 0.1px);
+  touch-action: none;
+}
+
+.pc-behind {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--pointer-x) var(--pointer-y),
+    var(--behind-glow-color) 0%,
+    transparent var(--behind-glow-size)
+  );
+  filter: blur(62px) saturate(1.25);
+  opacity: calc(0.95 * var(--card-opacity));
+  transition: opacity 200ms ease;
+}
+
+.pc-card-wrapper:hover,
+.pc-card-wrapper.active {
+  --card-opacity: 1;
+}
+
+.pc-card-shell {
+  position: relative;
+  z-index: 1;
+  transform-style: preserve-3d;
+}
+
+.pc-card {
+  height: 80svh;
+  max-height: 540px;
+  display: grid;
+  aspect-ratio: 0.718;
+  border-radius: var(--card-radius);
+  position: relative;
+  background-blend-mode: color-dodge, normal, normal, normal;
+  box-shadow: rgba(0, 0, 0, 0.85) calc((var(--pointer-from-left) * 10px) - 3px)
+    calc((var(--pointer-from-top) * 20px) - 6px) 24px -6px;
+  transition: transform 1s ease;
+  transform: translateZ(0) rotateX(0deg) rotateY(0deg);
+  background: #000;
+  border: 1px solid rgba(242, 236, 201, 0.24);
+  backface-visibility: hidden;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+
+.pc-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at var(--pointer-x) var(--pointer-y),
+      rgba(255, 252, 225, 0.66) 0%,
+      rgba(185, 207, 211, 0.2) 14%,
+      transparent 34%
+    ),
+    linear-gradient(
+      115deg,
+      transparent 28%,
+      rgba(255, 255, 255, 0.22) 46%,
+      transparent 62%
+    );
+  background-position:
+    center,
+    calc(var(--background-x) * 1.25) var(--background-y);
+  mix-blend-mode: screen;
+  opacity: calc(var(--card-opacity) * 0.72);
+  transition: opacity 220ms ease;
+}
+
+.pc-card:hover,
+.pc-card.active {
+  transition: none;
+  transform: translateZ(0) rotateX(var(--rotate-y)) rotateY(var(--rotate-x));
+  box-shadow:
+    rgba(0, 0, 0, 0.82) calc((var(--pointer-from-left) * 20px) - 10px)
+      calc((var(--pointer-from-top) * 26px) - 9px) 38px -8px,
+    0 0 54px rgba(230, 221, 170, 0.32),
+    0 0 96px rgba(104, 151, 166, 0.13);
+}
+
+.pc-card-shell.entering .pc-card {
+  transition: transform 180ms ease-out;
+}
+
+.pc-card * {
+  display: grid;
+  grid-area: 1/-1;
+  border-radius: var(--card-radius);
+  pointer-events: none;
+}
+
+.pc-inside {
+  inset: 0;
+  position: absolute;
+  background-image: var(--inner-gradient);
+  background-color: #070b19;
+  transform: none;
+  transform-style: preserve-3d;
+}
+
+.pc-shine {
+  mask-image: var(--icon);
+  mask-mode: luminance;
+  mask-repeat: repeat;
+  mask-size: 150%;
+  mask-position: top calc(200% - (var(--background-y) * 5)) left
+    calc(100% - var(--background-x));
+  transition: filter 0.8s ease;
+  filter: brightness(0.72) contrast(1.08) saturate(0.32) opacity(0.2);
+  animation: holo-bg 18s linear infinite;
+  animation-play-state: running;
+  mix-blend-mode: overlay;
+}
+
+.pc-shine,
+.pc-shine::after {
+  --space: 5%;
+  --angle: -45deg;
+  transform: translate3d(0, 0, 1px);
+  overflow: hidden;
+  z-index: 3;
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      var(--sunpillar-clr-1) calc(var(--space) * 1),
+      var(--sunpillar-clr-2) calc(var(--space) * 2),
+      var(--sunpillar-clr-3) calc(var(--space) * 3),
+      var(--sunpillar-clr-4) calc(var(--space) * 4),
+      var(--sunpillar-clr-5) calc(var(--space) * 5),
+      var(--sunpillar-clr-6) calc(var(--space) * 6),
+      var(--sunpillar-clr-1) calc(var(--space) * 7)
+    ),
+    repeating-linear-gradient(
+      var(--angle),
+      #0e152e 0%,
+      hsl(180, 10%, 60%) 3.8%,
+      hsl(180, 29%, 66%) 4.5%,
+      hsl(180, 10%, 60%) 5.2%,
+      #0e152e 10%,
+      #0e152e 12%
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--pointer-x) var(--pointer-y),
+      hsla(0, 0%, 0%, 0.1) 12%,
+      hsla(0, 0%, 0%, 0.15) 20%,
+      hsla(0, 0%, 0%, 0.25) 120%
+    );
+  background-position:
+    0 var(--background-y),
+    var(--background-x) var(--background-y),
+    center;
+  background-blend-mode: color, hard-light;
+  background-size:
+    500% 500%,
+    300% 300%,
+    200% 200%;
+  background-repeat: repeat;
+}
+
+.pc-shine::before,
+.pc-shine::after {
+  content: "";
+  background-position: center;
+  background-size: cover;
+  grid-area: 1/1;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.pc-card:hover .pc-shine,
+.pc-card.active .pc-shine {
+  filter: brightness(1.24) contrast(1.3) saturate(0.68) opacity(0.78);
+  animation-play-state: paused;
+}
+
+.pc-card:hover .pc-shine::before,
+.pc-card.active .pc-shine::before,
+.pc-card:hover .pc-shine::after,
+.pc-card.active .pc-shine::after {
+  opacity: 1;
+}
+
+.pc-shine::before {
+  background-image:
+    linear-gradient(
+      45deg,
+      var(--sunpillar-4),
+      var(--sunpillar-5),
+      var(--sunpillar-6),
+      var(--sunpillar-1),
+      var(--sunpillar-2),
+      var(--sunpillar-3)
+    ),
+    radial-gradient(
+      circle at var(--pointer-x) var(--pointer-y),
+      hsl(0, 0%, 70%) 0%,
+      hsla(0, 0%, 30%, 0.2) 90%
+    ),
+    var(--grain);
+  background-size:
+    250% 250%,
+    100% 100%,
+    220px 220px;
+  background-position:
+    var(--pointer-x) var(--pointer-y),
+    center,
+    calc(var(--pointer-x) * 0.01) calc(var(--pointer-y) * 0.01);
+  background-blend-mode: soft-light;
+  filter: brightness(calc(1.1 - var(--pointer-from-center) * 0.25))
+    contrast(calc(1 + var(--pointer-from-center) * 0.4))
+    saturate(calc(0.5 + var(--pointer-from-center) * 0.5));
+  mix-blend-mode: soft-light;
+  opacity: 0.75;
+}
+
+.pc-shine::after {
+  background-position:
+    0 var(--background-y),
+    calc(var(--background-x) * 0.4) calc(var(--background-y) * 0.5),
+    center;
+  background-size:
+    200% 300%,
+    700% 700%,
+    100% 100%;
+  mix-blend-mode: soft-light;
+  filter: brightness(0.85) contrast(1.2);
+  opacity: 0.6;
+}
+
+.pc-glare {
+  transform: translate3d(0, 0, 1.1px);
+  overflow: hidden;
+  background-image: radial-gradient(
+    farthest-corner circle at var(--pointer-x) var(--pointer-y),
+    hsl(48, 45%, 82%) 12%,
+    hsla(45, 30%, 18%, 0.85) 90%
+  );
+  mix-blend-mode: overlay;
+  filter: brightness(0.86) contrast(1.06);
+  opacity: 0.38;
+  z-index: 4;
+  transition:
+    opacity 220ms ease,
+    filter 220ms ease;
+}
+
+.pc-card:hover .pc-glare,
+.pc-card.active .pc-glare {
+  filter: brightness(1.16) contrast(1.14);
+  opacity: 0.76;
+}
+
+/* Mouse'u izleyen terminal/kod parıltısı. */
+.pc-code-field {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at var(--pointer-x) var(--pointer-y),
+      rgba(255, 247, 207, 0.68) 0%,
+      rgba(122, 178, 194, 0.3) 13%,
+      transparent 38%
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 31px,
+      rgba(226, 235, 226, 0.035) 31px 32px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 31px,
+      rgba(226, 235, 226, 0.025) 31px 32px
+    );
+  opacity: calc(0.14 + var(--card-opacity) * 0.76);
+  mix-blend-mode: screen;
+  transition: opacity 240ms ease;
+  transform: translateZ(28px);
+  transform-style: preserve-3d;
+}
+
+.pc-code-token {
+  --token-rotate: -7deg;
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: auto;
+  color: transparent;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(1.9rem, 4.2vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.12em;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 249, 218, 0.98) 0%,
+    rgba(222, 218, 194, 0.96) 48%,
+    rgba(164, 184, 190, 0.94) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter:
+    blur(0.25px)
+    drop-shadow(0 0 7px rgba(244, 235, 197, 0.58))
+    drop-shadow(0 0 14px rgba(140, 169, 177, 0.2));
+  opacity: calc(0.24 + var(--card-opacity) * 0.68);
+  transform: translate3d(
+      calc((var(--pointer-from-left) - 0.5) * -24px),
+    calc((var(--pointer-from-top) - 0.5) * -18px),
+      0
+    )
+    rotate(var(--token-rotate))
+    scale(calc(0.96 + var(--pointer-from-center) * 0.08));
+  transition:
+    opacity 220ms ease,
+    filter 220ms ease,
+    transform 180ms ease;
+}
+
+.pc-code-token:nth-child(1) { top: 27%; left: 8%; }
+.pc-code-token:nth-child(2) { --token-rotate: 8deg; top: 31%; right: 8%; left: auto; }
+.pc-code-token:nth-child(3) { --token-rotate: 5deg; top: 53%; left: 12%; }
+.pc-code-token:nth-child(4) { --token-rotate: -9deg; top: 59%; right: 9%; left: auto; }
+.pc-code-token:nth-child(5) { top: 72%; left: 16%; font-size: 2rem; }
+.pc-code-token:nth-child(6) { --token-rotate: 7deg; top: 76%; right: 12%; left: auto; font-size: 1.75rem; }
+
+.pc-card:hover .pc-code-token,
+.pc-card.active .pc-code-token {
+  filter:
+    blur(0.08px)
+    brightness(calc(1.02 + var(--pointer-from-center) * 0.16))
+    drop-shadow(0 0 10px rgba(255, 246, 207, 0.86))
+    drop-shadow(0 0 21px rgba(143, 172, 180, 0.34));
+  animation: pc-code-sparkle 920ms ease-in-out infinite alternate;
+}
+
+.pc-code-token:nth-child(2),
+.pc-code-token:nth-child(5) { animation-delay: -320ms; }
+.pc-code-token:nth-child(3),
+.pc-code-token:nth-child(6) { animation-delay: -610ms; }
+
+/* Avatar */
+.pc-avatar-content {
+  mix-blend-mode: normal;
+  overflow: hidden;
+  transform: translateZ(10px);
+  backface-visibility: hidden;
+}
+
+.pc-avatar-content .avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  transform: translateZ(0)
+    scale(calc(1.04 + (var(--pointer-from-top) - 0.5) * 0.03))
+    translateX(calc((var(--pointer-from-left) - 0.5) * -8px));
+  backface-visibility: hidden;
+  will-change: transform;
+  transition: transform 200ms ease-out;
+  filter: grayscale(0.28) brightness(0.76) saturate(0.68) contrast(1.08)
+    hue-rotate(168deg);
+}
+
+/* Metinlerin okunması için üst/alt karartma */
+.pc-avatar-content::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(6, 9, 25, 0.72) 0%, transparent 34%),
+    linear-gradient(to top, rgba(4, 8, 22, 0.88) 0%, rgba(11, 19, 44, 0.16) 55%, transparent 76%);
+}
+
+/* Sosyal ikonlar — kartın üstünde, tıklanabilir */
+.pc-socials {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 7;
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+  border-radius: 0;
+  transform: translateZ(52px);
+}
+
+.pc-socials a {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(230, 221, 170, 0.28);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  color: #e6ddaa;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: auto;
+}
+
+.pc-socials a:hover {
+  background: #e6ddaa;
+  color: #000;
+  transform: translateY(-2px);
+}
+
+.pc-socials svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+}
+
+/* Marka etiketi */
+.pc-kicker {
+  position: absolute;
+  top: 22px;
+  left: 18px;
+  z-index: 6;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(230, 221, 170, 0.75);
+  border-radius: 0;
+  transform: translateZ(44px);
+}
+
+/* Alt bilgi bloğu */
+.pc-user-info {
+  position: absolute;
+  --ui-inset: 18px;
+  --ui-radius-bias: 6px;
+  bottom: var(--ui-inset);
+  left: var(--ui-inset);
+  right: var(--ui-inset);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(26px);
+  border: 1px solid rgba(230, 221, 170, 0.18);
+  border-radius: calc(
+    max(0px, var(--card-radius) - var(--ui-inset) + var(--ui-radius-bias))
+  );
+  padding: 11px 12px;
+  pointer-events: auto;
+  transform: translateZ(52px);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.34),
+    inset 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.pc-user-details {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.pc-mini-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgba(230, 221, 170, 0.22);
+  flex-shrink: 0;
+}
+
+.pc-mini-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.pc-user-text {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.pc-handle {
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(249, 244, 218, 0.98);
+  line-height: 1;
+}
+
+.pc-status {
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(223, 220, 199, 0.78);
+  line-height: 1;
+}
+
+.pc-contact-btn {
+  border: 1px solid rgba(230, 221, 170, 0.35);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: var(--font-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(230, 221, 170, 0.95);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+}
+
+.pc-contact-btn:hover {
+  background: #e6ddaa;
+  color: #000;
+  transform: translateY(-1px);
+}
+
+/* İsim / rol */
+.pc-content:not(.pc-avatar-content) {
+  max-height: 100%;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  transform: translate3d(
+    calc(var(--pointer-from-left) * -6px + 3px),
+    calc(var(--pointer-from-top) * -6px + 3px),
+    40px
+  );
+  z-index: 5;
+  mix-blend-mode: normal;
+  transform-style: preserve-3d;
+}
+
+.pc-details {
+  right: 0;
+  bottom: auto;
+  left: 0;
+  width: auto;
+  position: absolute;
+  top: 6.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 28px;
+}
+
+.pc-details h3 {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  margin: 0;
+  max-width: 12ch;
+  font-size: clamp(2.65rem, 5vw, 4.3rem);
+  line-height: 0.86;
+  background-image: linear-gradient(to bottom, #ffffff 0%, #dddff0 68%, #b5bacf 100%);
+  background-size: 1em 1.5em;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter: drop-shadow(0 3px 16px rgba(0, 0, 0, 0.72));
+}
+
+.pc-details p {
+  font-family: var(--font-mono), monospace;
+  font-weight: 650;
+  position: relative;
+  top: 2px;
+  white-space: nowrap;
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  margin: 0 auto;
+  width: min-content;
+  background-image: linear-gradient(to bottom, #f5f3e6, #b8bdca);
+  background-size: 1em 1.5em;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.78));
+}
+
+@keyframes holo-bg {
+  0% {
+    background-position:
+      0 var(--background-y),
+      0 0,
+      center;
+  }
+  100% {
+    background-position:
+      0 var(--background-y),
+      90% 90%,
+      center;
+  }
+}
+
+@keyframes pc-code-sparkle {
+  0% {
+    opacity: calc(0.42 + var(--card-opacity) * 0.34);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Lanyard'a asılı kullanım: boyutu kap belirler.
+   Kart zaten 3B sahnede döndüğü için kartın KENDİ CSS 3B dönüşü kapatılır;
+   iç içe perspektif + backface-visibility bu bağlamda kartı görünmez yapıyordu.
+   Hover'ın görsel karşılığı (holografik parlama, glare, ışık) korunur. */
+.pc-card-wrapper.pc-on-lanyard {
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.pc-card-wrapper.pc-on-lanyard .pc-card {
+  height: auto;
+  max-height: none;
+  width: 100%;
+  backface-visibility: visible;
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg);
+  /* Kritik: karışım modları (shine/glare/luminosity) yalnızca kartın KENDİ
+     katmanlarıyla harmanlansın. İzolasyon olmadan arkadaki saydam WebGL
+     tuvaliyle harmanlanıp kart hover'da tamamen kaybolabiliyor. */
+  isolation: isolate;
+  box-shadow:
+    0 28px 78px rgba(0, 0, 0, 0.62),
+    inset 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.pc-card-wrapper.pc-on-lanyard .pc-card:hover,
+.pc-card-wrapper.pc-on-lanyard .pc-card.active {
+  transform: perspective(900px) rotateX(var(--rotate-y)) rotateY(var(--rotate-x));
+}
+
+.pc-card-wrapper.pc-on-lanyard .pc-card,
+.pc-card-wrapper.pc-on-lanyard .pc-avatar-content,
+.pc-card-wrapper.pc-on-lanyard .pc-avatar-content .avatar {
+  backface-visibility: visible;
+}
+
+/* Hover'da kart hafifçe öne çıksın (3B dönüş yerine ölçek) */
+.pc-card-wrapper.pc-on-lanyard .pc-card-shell {
+  transition:
+    transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    filter 420ms ease;
+  transform-style: preserve-3d;
+}
+
+.pc-card-wrapper.pc-on-lanyard:hover .pc-card-shell {
+  transform: translateY(-3px) scale(1.018);
+  filter: brightness(1.09) saturate(1.06);
+}
+
+@media (max-width: 768px) {
+  .pc-card {
+    height: 70svh;
+    max-height: 450px;
+  }
+  .pc-details {
+    top: 5.2rem;
+    bottom: auto;
+    padding-inline: 22px;
+  }
+  .pc-details h3 {
+    font-size: min(4svh, 2em);
+  }
+  .pc-user-info {
+    --ui-inset: 14px;
+    padding: 9px 10px;
+  }
+  .pc-mini-avatar {
+    width: 34px;
+    height: 34px;
+  }
+  .pc-socials a {
+    width: 35px;
+    height: 35px;
+  }
+  .pc-socials svg {
+    width: 16px;
+    height: 16px;
+  }
+}
