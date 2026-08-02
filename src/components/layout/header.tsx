@@ -8,7 +8,7 @@ import { MenuBackdrop } from "@/components/layout/menu-backdrop";
 import { MenuGrid } from "@/components/layout/menu-grid";
 import { ThemeToggle } from "@/components/ui/be-ui-theme-toggle";
 import { mainNav, site } from "@/lib/site";
-import { cn } from "@/lib/utils";
+import { cn, normalizePath } from "@/lib/utils";
 
 /**
  * Header: solda iki satırlı kelime işareti, sağda MENÜ butonu.
@@ -19,6 +19,8 @@ import { cn } from "@/lib/utils";
  */
 export function Header() {
   const pathname = usePathname();
+  /* trailingSlash açık: "/hizmetler/" ile "/hizmetler" eşit sayılmalı. */
+  const route = normalizePath(pathname);
   const [open, setOpen] = useState(false);
   /* Hover sahnesi ilk açılışa kadar DOM'a girmez — görselleri boşuna indirmesin. */
   const [mounted, setMounted] = useState(false);
@@ -159,8 +161,8 @@ export function Header() {
                 {mainNav.map((item, i) => {
                   const current =
                     item.href === "/"
-                      ? pathname === "/"
-                      : pathname.startsWith(item.href);
+                      ? route === "/"
+                      : route.startsWith(item.href);
                   return (
                     <li key={item.href}>
                       <Link

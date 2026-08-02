@@ -1,13 +1,14 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { normalizePath } from "@/lib/utils";
 
 /**
  * Index sayfası tam ekran sahne sistemidir; footer ve normal sayfa akışı
  * yalnızca diğer rotalarda görünür.
  */
 export function HideOnIndex({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   if (pathname === "/") return null;
   return <>{children}</>;
 }
@@ -20,7 +21,7 @@ export function HideOnContactRoutes({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  const pathname = normalizePath(usePathname());
   if (CTA_HIDDEN.includes(pathname)) return null;
   return <>{children}</>;
 }

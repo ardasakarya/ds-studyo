@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { ArrowDown, ChevronRight } from "lucide-react";
 import { scenes } from "@/lib/scenes";
+import { normalizePath } from "@/lib/utils";
 
 type Breadcrumb = { label: string; href?: string };
 
@@ -60,7 +61,8 @@ export function PageHero({
   children,
 }: PageHeroProps) {
   const pathname = usePathname();
-  const scene = scenes.find((item) => item.href === pathname);
+  const route = normalizePath(pathname);
+  const scene = scenes.find((item) => item.href === route);
   const heroRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
