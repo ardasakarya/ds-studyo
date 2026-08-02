@@ -116,23 +116,39 @@ Varlıklar: `public/lanyard/card.glb` (kart modeli), `lanyard-light.png` (bant
 dokusu). Bağımlılıklar: `three`, `meshline`, `@react-three/fiber`,
 `@react-three/drei`, `@react-three/rapier`.
 
-## Yayına alma
+## Yayına alma — GitHub Pages
 
-Next.js uygulaması olduğu için elle bir `index.html` hazırlamana gerek yok;
-sayfaları `next build` üretiyor.
+Site **tamamen statik** üretiliyor: `npm run build` sonunda `out/` klasöründe
+her rota için bir `index.html` oluşuyor (`next.config.ts` → `output: "export"`).
+Elle `index.html` hazırlamana gerek yok.
 
-**Önerilen — Vercel (Next.js'in kendi platformu, ücretsiz):**
+1. Bu klasörü GitHub'a push et (dal: `main`).
+2. Repo → **Settings → Pages → Source: GitHub Actions** seç.
+3. Hepsi bu. `.github/workflows/deploy.yml` her push'ta derleyip yayınlar;
+   adres `https://<kullanici>.github.io/<repo-adi>/` olur.
 
-1. Bu klasörü GitHub'a push et.
-2. vercel.com → *Add New Project* → repoyu seç → hiçbir ayar değiştirme → Deploy.
-3. Framework "Next.js" olarak algılanır, `npm run build` çalışır, site yayına girer.
+Alt dizinde yayınlandığı için (`/<repo-adi>`) bütün bağlantı ve dosya
+adreslerinin başına o yolun gelmesi gerekiyor. Workflow bunu repo adından
+hesaplayıp `NEXT_PUBLIC_BASE_PATH` ile veriyor — repo adı
+`<kullanici>.github.io` ise otomatik olarak boş bırakır. Elle denemek için:
 
-**Statik hosting (GitHub Pages, cPanel, Netlify…):** `next.config.ts` içine
-`output: "export"` + `images: { unoptimized: true }` eklenip `next build`
-çalıştırılır; `out/` klasörü `index.html` ve alt sayfalarıyla birlikte oluşur ve
-olduğu gibi yüklenir. Bu modda sunucu tarafı özellikler kapanır — `/paketler`
-sayfasındaki `?hizmet=…` derin bağlantısının istemci tarafında okunacak şekilde
-değiştirilmesi gerekir.
+```bash
+NEXT_PUBLIC_BASE_PATH=/repo-adi npm run build   # out/ alt yola göre üretilir
+```
+
+Bu yapının gerektirdikleri (hepsi kurulu):
+
+- `public/.nojekyll` — olmazsa Pages `_next/` klasörünü yok sayar, site çıplak
+  HTML olarak açılır.
+- `trailingSlash: true` — `/hizmetler` → `/hizmetler/index.html`.
+- `src/lib/asset.ts` — `public/` altındaki her dosya yolu buradan geçer;
+  Next.js `basePath`i yalnızca kendi ürettiği varlıklara ekliyor.
+- Marka fontları `next/font/local` ile paketlenir (`src/fonts/`), CSS'te
+  mutlak `url("/fonts/…")` yoktur.
+
+Sunucu tarafı yok: API route'u, sunucu tarafı form işleme veya `searchParams`
+okuyan sayfa eklenemez. Formlar şimdilik `mailto:` ile çalışıyor; gerçek form
+gönderimi gerekirse ya Formspree gibi bir servis ya da Vercel'e geçiş gerekir.
 
 ## Sıradaki adımlar
 

@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { mainNav, site } from "@/lib/site";
 import "./site-footer.css";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -408,12 +409,12 @@ export function SiteFooter() {
         <div className="footer-images" aria-hidden>
           <div className="footer-hand">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/footer/hand-left.jpg" alt="" />
+            <img src={asset("/footer/hand-left.jpg")} alt="" />
             <canvas />
           </div>
           <div className="footer-hand">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/footer/hand-right.jpg" alt="" />
+            <img src={asset("/footer/hand-right.jpg")} alt="" />
             <canvas />
           </div>
         </div>

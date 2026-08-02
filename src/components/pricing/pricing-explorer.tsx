@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, Plus, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -65,15 +65,46 @@ function resolveDeepLink(linkedService?: string, linkedTier?: string) {
   };
 }
 
-export function PricingExplorer({
-  hizmet,
-  paket,
+/* --- Adres çubuğundaki sorgu dizesi (statik dışa aktarım uyumlu) -------- */
+
+const subscribeToSearch = (onChange: () => void) => {
+  window.addEventListener("popstate", onChange);
+  return () => window.removeEventListener("popstate", onChange);
+};
+
+const readSearch = () => window.location.search;
+/** Sunucuda ve hidrasyon anında boş: ilk boyama her iki tarafta da aynı. */
+const noSearch = () => "";
+
+/**
+ * Sorguyu okur ve seçimleri ona göre kuran asıl bileşeni döndürür.
+ *
+ * Sayfa statik dışa aktarıldığı için `searchParams` sunucudan gelemiyor;
+ * sorgu hidrasyondan sonra okunuyor ve `key` değişince iç bileşen o
+ * seçimlerle yeniden kuruluyor (efekt içinde setState yok, uyuşmazlık yok).
+ */
+export function PricingExplorer() {
+  const search = useSyncExternalStore(subscribeToSearch, readSearch, noSearch);
+  const params = new URLSearchParams(search);
+  const linked = resolveDeepLink(
+    params.get("hizmet") ?? undefined,
+    params.get("paket") ?? undefined,
+  );
+
+  return (
+    <PricingExplorerView
+      key={`${linked.service}-${linked.tier}-${linked.step}`}
+      linked={linked}
+    />
+  );
+}
+
+function PricingExplorerView({
+  linked,
 }: {
-  hizmet?: string;
-  paket?: string;
+  linked: ReturnType<typeof resolveDeepLink>;
 }) {
   const calculatorRef = useRef<HTMLDivElement>(null);
-  const linked = resolveDeepLink(hizmet, paket);
 
   const [serviceSlug, setServiceSlug] = useState(linked.service);
   const [tierSlug, setTierSlug] = useState(linked.tier);

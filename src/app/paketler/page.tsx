@@ -8,18 +8,15 @@ import { faqs } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Paketler ve fiyatlar",
   description:
-    "15 hizmetin tamamı için üç kademeli paketler, özellik karşılaştırması ve adım adım fiyat hesaplayıcı. Şeffaf başlangıç fiyatları.",
+    "Tüm hizmetler için üç kademeli paketler, özellik karşılaştırması ve adım adım fiyat hesaplayıcı. Şeffaf başlangıç fiyatları.",
 };
 
-/** Paket kartlarından ve hizmet sayfalarından gelen derin bağlantılar:
- *  /paketler?hizmet=web-sitesi&paket=web-sitesi-kurumsal */
-type Params = {
-  searchParams: Promise<{ hizmet?: string; paket?: string }>;
-};
-
-export default async function PricingPage({ searchParams }: Params) {
-  const { hizmet, paket } = await searchParams;
-
+/**
+ * Derin bağlantılar (`/paketler/?hizmet=web-sitesi&paket=web-sitesi-kurumsal`)
+ * istemci tarafında okunuyor: site statik dışa aktarıldığı için sayfa
+ * `searchParams` alamaz. Bkz. `PricingExplorer`.
+ */
+export default function PricingPage() {
   return (
     <>
       <PageHero
@@ -30,7 +27,7 @@ export default async function PricingPage({ searchParams }: Params) {
         breadcrumbs={[{ label: "Anasayfa", href: "/" }, { label: "Paketler" }]}
       />
 
-      <PricingExplorer hizmet={hizmet} paket={paket} />
+      <PricingExplorer />
 
       {/* Fiyat SSS */}
       <section className="section">

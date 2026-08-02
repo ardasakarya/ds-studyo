@@ -1,9 +1,10 @@
 "use client";
 
 import { menuScenes } from "@/lib/menu-scenes";
+import { asset } from "@/lib/asset";
 
 /** Hiçbir satırın üstünde değilken duran varsayılan arkaplan. */
-const IDLE_BG = "/scenes/hakkimizda-light-v2.webp";
+const IDLE_BG = asset("/scenes/hakkimizda-light-v2.webp");
 
 /**
  * Menünün tamamını kaplayan soluk arkaplan görseli.

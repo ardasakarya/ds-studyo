@@ -15,13 +15,15 @@ export type HeroChapter = {
   description: string;
 };
 
+import { asset } from "@/lib/asset";
+
 export const heroChapters: HeroChapter[] = [
   {
     no: "01",
     label: "anasayfa",
     title: "Anasayfa",
     href: "#icerik",
-    image: "/hero/01-anasayfa.jpg",
+    image: asset("/hero/01-anasayfa.jpg"),
     tilt: -4,
     left: ["ajans değil", "stüdyo"],
     right: ["kodu yazan", "ekiple konuşun"],
@@ -33,7 +35,7 @@ export const heroChapters: HeroChapter[] = [
     label: "hizmetler",
     title: "Hizmetler",
     href: "/hizmetler",
-    image: "/hero/02-hizmetler.jpg",
+    image: asset("/hero/02-hizmetler.jpg"),
     tilt: 3,
     left: ["15 başlık", "tek ekip"],
     right: ["fikirden", "yayına"],
@@ -45,7 +47,7 @@ export const heroChapters: HeroChapter[] = [
     label: "referanslar",
     title: "Referanslar",
     href: "/referanslar",
-    image: "/references/merada-yonetim.jpg",
+    image: asset("/references/merada-yonetim.jpg"),
     tilt: -3,
     left: ["6 ürün", "yayında"],
     right: ["hepsi canlı", "hepsi ölçülü"],
@@ -57,7 +59,7 @@ export const heroChapters: HeroChapter[] = [
     label: "paketler",
     title: "Paketler",
     href: "/paketler",
-    image: "/hero/04-paketler.jpg",
+    image: asset("/hero/04-paketler.jpg"),
     tilt: 4,
     left: ["şeffaf fiyat", "sabit kapsam"],
     right: ["₺14.900", "'dan başlayan"],
@@ -69,7 +71,7 @@ export const heroChapters: HeroChapter[] = [
     label: "hakkımızda",
     title: "Hakkımızda",
     href: "/hakkimizda",
-    image: "/hero/05-hakkimizda.jpg",
+    image: asset("/hero/05-hakkimizda.jpg"),
     tilt: -2.5,
     left: ["iki kişilik", "çekirdek"],
     right: ["kurumsal", "disiplin"],
@@ -81,7 +83,7 @@ export const heroChapters: HeroChapter[] = [
     label: "iletişim",
     title: "İletişim",
     href: "/iletisim",
-    image: "/references/by-kurtulus.jpg",
+    image: asset("/references/by-kurtulus.jpg"),
     tilt: 3.5,
     left: ["keşif görüşmesi", "ücretsiz"],
     right: ["48 saatte", "dönüş"],

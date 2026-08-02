@@ -13,6 +13,8 @@ export type TeamMember = {
   skills: string[];
 };
 
+import { asset } from "@/lib/asset";
+
 export const teamMembers: TeamMember[] = [
   {
     slug: "arda",
@@ -21,7 +23,7 @@ export const teamMembers: TeamMember[] = [
     role: "Bilgisayar Mühendisi",
     handle: "ardasakarya",
     status: "Projede aktif",
-    image: "/scenes/hizmetler-light-v2.webp",
+    image: asset("/scenes/hizmetler-light-v2.webp"),
     skills: ["Arayüz mimarisi", "Motion & 3B", "Performans"],
   },
   {
@@ -31,7 +33,7 @@ export const teamMembers: TeamMember[] = [
     role: "Bilgisayar Mühendisi",
     handle: "hasandenizhan",
     status: "Projede aktif",
-    image: "/scenes/hakkimizda-light-v2.webp",
+    image: asset("/scenes/hakkimizda-light-v2.webp"),
     skills: ["Veri modeli", "Entegrasyon", "Bulut & güvenlik"],
   },
 ];

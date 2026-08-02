@@ -8,6 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ArrowRight } from "lucide-react";
 import "./quote-spotlight.css";
+import { asset } from "@/lib/asset";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -224,7 +225,7 @@ export function QuoteSpotlight() {
         <div className="qs-stage" aria-hidden>
           <div className="qs-mesh">
             <Image
-              src="/spotlight/mesh.png"
+              src={asset("/spotlight/mesh.png")}
               alt=""
               width={1400}
               height={1400}

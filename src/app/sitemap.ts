@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 import { posts, projects, services } from "@/lib/data";
 import { site } from "@/lib/site";
 
+/** Statik dışa aktarımda derleme anında üretilir. */
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     "",

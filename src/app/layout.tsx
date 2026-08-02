@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { site } from "@/lib/site";
 import { Header } from "@/components/layout/header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -12,6 +13,30 @@ import { RevealEngine } from "@/components/reveal-engine";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
+
+/* Self-hosted marka fontları. next/font/local ile paketlendikleri için
+   adresleri derlemede `_next/static/media/…` altına taşınır — sitenin alt
+   yolda (GitHub Pages) yayınlanması hâlinde de kırılmaz. */
+const clashDisplay = localFont({
+  src: [
+    { path: "../fonts/clash-display-400.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/clash-display-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/clash-display-600.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/clash-display-700.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-clash-display",
+  display: "swap",
+});
+
+const satoshi = localFont({
+  src: [
+    { path: "../fonts/satoshi-400.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/satoshi-500.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/satoshi-700.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  display: "swap",
+});
 
 /* Sayaç ve claim katmanının mono fontu (spec: DM Mono) */
 const dmMono = DM_Mono({
@@ -53,7 +78,7 @@ export default function RootLayout({
   return (
     <html
       lang="tr"
-      className={`${dmMono.variable} h-full`}
+      className={`${clashDisplay.variable} ${satoshi.variable} ${dmMono.variable} h-full`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col antialiased">

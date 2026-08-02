@@ -4,6 +4,7 @@ import Lanyard from "@/components/ui/lanyard";
 import { ProfileCard } from "@/components/ui/profile-card";
 import { site } from "@/lib/site";
 import { teamMembers } from "@/lib/team";
+import { asset } from "@/lib/asset";
 
 /**
  * Ekip bölümü — Lanyard + ProfileCard karması.
@@ -57,7 +58,7 @@ export function TeamLanyards() {
                 position={[0, 1.6, 16]}
                 gravity={[0, -40, 0]}
                 fov={22}
-                lanyardImage="/lanyard/lanyard-light.png"
+                lanyardImage={asset("/lanyard/lanyard-light.png")}
                 lanyardWidth={0.92}
                 dropDirection={index % 2 === 0 ? -1 : 1}
                 cardContent={

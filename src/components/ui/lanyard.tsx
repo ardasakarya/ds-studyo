@@ -36,6 +36,7 @@ import {
 import { MeshLineGeometry, MeshLineMaterial } from "meshline";
 import * as THREE from "three";
 import "./lanyard.css";
+import { asset } from "@/lib/asset";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
@@ -309,7 +310,7 @@ function Band({
   };
 
   const { nodes, materials } = useGLTF(
-    "/lanyard/card.glb",
+    asset("/lanyard/card.glb"),
   ) as unknown as LanyardModel;
 
   /* İp ile kart arasındaki klips: karanlıkta kaybolmasın diye açık renk */
@@ -324,7 +325,7 @@ function Band({
     return next;
   }, [materials.metal]);
 
-  const sourceTexture = useTexture(lanyardImage ?? "/lanyard/lanyard.png");
+  const sourceTexture = useTexture(lanyardImage ?? asset("/lanyard/lanyard.png"));
   const frontTex = useTexture(frontImage ?? BLANK_PIXEL);
   const backTex = useTexture(backImage ?? BLANK_PIXEL);
 
@@ -639,4 +640,4 @@ function Band({
   );
 }
 
-useGLTF.preload("/lanyard/card.glb");
+useGLTF.preload(asset("/lanyard/card.glb"));

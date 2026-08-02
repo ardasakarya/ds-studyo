@@ -4,6 +4,8 @@
  * Sayfalar ve bileşenler bu dosyadan beslenir, hiçbir metin JSX içine gömülmez.
  */
 
+import { asset } from "@/lib/asset";
+
 /* ------------------------------------------------------------------ */
 /* Hizmetler                                                           */
 /* ------------------------------------------------------------------ */
@@ -74,8 +76,8 @@ const allServices: Service[] = [
     title: "Web sitesi",
     tag: "WEB",
     icon: "globe",
-    image: "/services/web-sitesi.webp",
-    imageLight: "/services/web-sitesi-aydinlik.webp",
+    image: asset("/services/web-sitesi.webp"),
+    imageLight: asset("/services/web-sitesi-aydinlik.webp"),
     group: "yazilim",
     featured: true,
     summary:
@@ -111,8 +113,8 @@ const allServices: Service[] = [
     title: "Web uygulaması",
     tag: "WEB APP",
     icon: "app-window",
-    image: "/services/web-uygulamasi.webp",
-    imageLight: "/services/web-uygulamasi-aydinlik.webp",
+    image: asset("/services/web-uygulamasi.webp"),
+    imageLight: asset("/services/web-uygulamasi-aydinlik.webp"),
     group: "yazilim",
     featured: true,
     summary:
@@ -148,8 +150,8 @@ const allServices: Service[] = [
     title: "Mobil uygulama",
     tag: "MOBILE",
     icon: "smartphone",
-    image: "/services/mobil-uygulama.webp",
-    imageLight: "/services/mobil-uygulama-aydinlik.webp",
+    image: asset("/services/mobil-uygulama.webp"),
+    imageLight: asset("/services/mobil-uygulama-aydinlik.webp"),
     group: "yazilim",
     featured: true,
     summary: "iOS ve Android için hızlı, sezgisel ve uzun ömürlü ürünler.",
@@ -184,8 +186,8 @@ const allServices: Service[] = [
     title: "E-ticaret sistemleri",
     tag: "COMMERCE",
     icon: "shopping-cart",
-    image: "/services/e-ticaret.webp",
-    imageLight: "/services/e-ticaret-aydinlik.webp",
+    image: asset("/services/e-ticaret.webp"),
+    imageLight: asset("/services/e-ticaret-aydinlik.webp"),
     group: "yazilim",
     featured: true,
     summary:
@@ -221,8 +223,8 @@ const allServices: Service[] = [
     title: "Kişiye özel yazılım",
     tag: "CUSTOM",
     icon: "wrench",
-    image: "/services/ozel-yazilim.webp",
-    imageLight: "/services/ozel-yazilim-aydinlik.webp",
+    image: asset("/services/ozel-yazilim.webp"),
+    imageLight: asset("/services/ozel-yazilim-aydinlik.webp"),
     group: "yazilim",
     featured: true,
     summary:
@@ -258,8 +260,8 @@ const allServices: Service[] = [
     title: "Yapay zekâ çözümleri",
     tag: "AI",
     icon: "sparkles",
-    image: "/services/yapay-zeka.webp",
-    imageLight: "/services/yapay-zeka-aydinlik.webp",
+    image: asset("/services/yapay-zeka.webp"),
+    imageLight: asset("/services/yapay-zeka-aydinlik.webp"),
     group: "yazilim",
     featured: true,
     summary:
@@ -295,8 +297,8 @@ const allServices: Service[] = [
     title: "SaaS ürün altyapısı",
     tag: "SAAS",
     icon: "boxes",
-    image: "/services/saas.webp",
-    imageLight: "/services/saas-aydinlik.webp",
+    image: asset("/services/saas.webp"),
+    imageLight: asset("/services/saas-aydinlik.webp"),
     group: "yazilim",
     summary:
       "Abonelik, üyelik, ödeme ve çok kiracılı ölçeklenebilir ürün altyapıları.",
@@ -330,8 +332,8 @@ const allServices: Service[] = [
     title: "Masaüstü uygulaması",
     tag: "DESKTOP",
     icon: "monitor",
-    image: "/services/masaustu-uygulama.webp",
-    imageLight: "/services/masaustu-uygulama-aydinlik.webp",
+    image: asset("/services/masaustu-uygulama.webp"),
+    imageLight: asset("/services/masaustu-uygulama-aydinlik.webp"),
     group: "yazilim",
     summary:
       "macOS ve Windows için güvenli, hızlı ve çevrimdışı çalışabilen yazılımlar.",
@@ -363,8 +365,8 @@ const allServices: Service[] = [
     title: "API & entegrasyon",
     tag: "API",
     icon: "webhook",
-    image: "/services/api-entegrasyon.webp",
-    imageLight: "/services/api-entegrasyon-aydinlik.webp",
+    image: asset("/services/api-entegrasyon.webp"),
+    imageLight: asset("/services/api-entegrasyon-aydinlik.webp"),
     group: "yazilim",
     summary:
       "CRM, ERP, ödeme, muhasebe ve üçüncü taraf sistemleri tek akışta buluştururuz.",
@@ -396,8 +398,8 @@ const allServices: Service[] = [
     title: "İş süreci otomasyonu",
     tag: "AUTOMATION",
     icon: "workflow",
-    image: "/services/otomasyon.webp",
-    imageLight: "/services/otomasyon-aydinlik.webp",
+    image: asset("/services/otomasyon.webp"),
+    imageLight: asset("/services/otomasyon-aydinlik.webp"),
     group: "yazilim",
     summary:
       "Tekrarlayan operasyonları ölçülebilir ve hatasız dijital akışlara dönüştürürüz.",
@@ -429,8 +431,8 @@ const allServices: Service[] = [
     title: "SEO",
     tag: "GROWTH",
     icon: "trending-up",
-    image: "/services/seo.webp",
-    imageLight: "/services/seo-aydinlik.webp",
+    image: asset("/services/seo.webp"),
+    imageLight: asset("/services/seo-aydinlik.webp"),
     group: "buyume",
     summary:
       "Teknik SEO, içerik mimarisi, hız ve organik görünürlük çalışmaları.",
@@ -462,8 +464,8 @@ const allServices: Service[] = [
     title: "Google & Meta Ads",
     tag: "ADS",
     icon: "megaphone",
-    image: "/services/reklam.webp",
-    imageLight: "/services/reklam-aydinlik.webp",
+    image: asset("/services/reklam.webp"),
+    imageLight: asset("/services/reklam-aydinlik.webp"),
     group: "buyume",
     summary:
       "Ölçülebilir reklam stratejisi, kampanya kurulumu ve dönüşüm optimizasyonu.",
@@ -495,8 +497,8 @@ const allServices: Service[] = [
     title: "Sosyal medya yönetimi",
     tag: "SOCIAL",
     icon: "share",
-    image: "/services/sosyal-medya.webp",
-    imageLight: "/services/sosyal-medya-aydinlik.webp",
+    image: asset("/services/sosyal-medya.webp"),
+    imageLight: asset("/services/sosyal-medya-aydinlik.webp"),
     group: "buyume",
     summary:
       "İçerik planı, kreatif üretim, topluluk yönetimi ve performans raporlaması.",
@@ -521,8 +523,8 @@ const allServices: Service[] = [
     title: "UI/UX & ürün tasarımı",
     tag: "DESIGN",
     icon: "palette",
-    image: "/services/ui-ux.webp",
-    imageLight: "/services/ui-ux-aydinlik.webp",
+    image: asset("/services/ui-ux.webp"),
+    imageLight: asset("/services/ui-ux-aydinlik.webp"),
     group: "tasarim-destek",
     summary:
       "Araştırmadan prototipe, tasarım sisteminden kullanılabilirlik testine.",
@@ -555,8 +557,8 @@ const allServices: Service[] = [
     title: "Bakım, bulut & destek",
     tag: "CLOUD",
     icon: "life-buoy",
-    image: "/services/bakim-destek.webp",
-    imageLight: "/services/bakim-destek-aydinlik.webp",
+    image: asset("/services/bakim-destek.webp"),
+    imageLight: asset("/services/bakim-destek-aydinlik.webp"),
     group: "tasarim-destek",
     summary:
       "Yayın, izleme, güvenlik, yedekleme ve sürdürülebilir teknik destek.",
@@ -635,7 +637,7 @@ export const projects: Project[] = [
     category: "Gayrimenkul · Kurumsal web",
     domain: "meradagayrimenkul.com",
     href: "https://meradagayrimenkul.com/",
-    image: "/references/merada-gayrimenkul.jpg",
+    image: asset("/references/merada-gayrimenkul.jpg"),
     year: "2025",
     summary:
       "Mersin'in emlak ofisi için ilan yönetimi olan kurumsal site ve arama deneyimi.",
@@ -665,7 +667,7 @@ export const projects: Project[] = [
     category: "Site yönetimi · Web uygulaması",
     domain: "meradayonetim.com",
     href: "https://meradayonetim.com/",
-    image: "/references/merada-yonetim.jpg",
+    image: asset("/references/merada-yonetim.jpg"),
     year: "2025",
     summary:
       "Apartman ve site yönetimi için aidat, gider ve duyuru akışını tek panelde toplayan platform.",
@@ -695,7 +697,7 @@ export const projects: Project[] = [
     category: "Sağlık teknolojileri · Kurumsal web",
     domain: "denizhanmedikal.com.tr",
     href: "https://test.denizhanmedikal.com.tr/",
-    image: "/references/denizhan-medikal.jpg",
+    image: asset("/references/denizhan-medikal.jpg"),
     year: "2026",
     summary:
       "Medikal cihaz firması için ürün kataloğu ve bayi odaklı kurumsal site.",
@@ -725,7 +727,7 @@ export const projects: Project[] = [
     category: "Kuyumculuk · E-ticaret",
     domain: "bykurtulus.com",
     href: "https://bykurtulus.com/",
-    image: "/references/by-kurtulus.jpg",
+    image: asset("/references/by-kurtulus.jpg"),
     year: "2025",
     summary:
       "Kuyum markası için ürün vitrini ve online satış deneyimi.",
@@ -754,7 +756,7 @@ export const projects: Project[] = [
     category: "Turizm · Rezervasyon platformu",
     domain: "diamondtourism.tr",
     href: "https://diamondtourism.tr/anasayfa",
-    image: "/references/diamond-tourism.jpg",
+    image: asset("/references/diamond-tourism.jpg"),
     year: "2026",
     summary:
       "Villa, araç ve tekne kiralama için rezervasyon ve admin altyapısı.",
@@ -784,7 +786,7 @@ export const projects: Project[] = [
     category: "Endüstri · Kurumsal web",
     domain: "elitprofil.com",
     href: "https://ardasakarya.github.io/elitProfil_new/",
-    image: "/references/elit-profil.jpg",
+    image: asset("/references/elit-profil.jpg"),
     year: "2026",
     summary:
       "Isıcam profili üreticisi için ürünü anlatan sinematik kurumsal deneyim.",
