@@ -157,3 +157,5 @@ gönderimi gerekirse ya Formspree gibi bir servis ya da Vercel'e geçiş gerekir
 3. Blog içeriklerinin MDX'e taşınması
 4. OG görseli, favicon, JSON-LD (Organization + Service şemaları)
 5. Ekip fotoğrafları ve gerçek müşteri yorumları
+# ds-studyo
+
