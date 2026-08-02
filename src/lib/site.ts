@@ -5,8 +5,11 @@
 export const site = {
   name: "D&S", // ŞİMDİLİK — marka adı kesinleşince değiştir
   legalName: "D&S Yazılım",
-  domain: "monolit.com.tr", // TODO
-  url: "https://monolit.com.tr", // TODO
+  domain: "monolit.com.tr", // TODO: alan adı alınınca değiştir
+  /* Sitemap ve OG etiketlerinde kullanılan mutlak adres. GitHub Pages'te
+     yayın adresi derleme sırasında NEXT_PUBLIC_SITE_URL ile veriliyor;
+     kendi alan adınıza geçince aşağıdaki varsayılanı güncelleyin. */
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://monolit.com.tr",
   tagline: "Fikirden canlıya, tek ekip.",
   description:
     "Web sitesi, mobil uygulama, e-ticaret ve kurumsal yazılım geliştiriyoruz. Kurucularla direkt çalışırsınız, kod tamamen sizin olur.",
