@@ -117,81 +117,88 @@ export function QuoteSpotlight() {
       };
       setReady(false);
 
+      /* Sahnenin verilen ilerlemedeki hâli. `onUpdate` YALNIZCA scroll
+         değişince çalıştığı için ayrı bir işlev: bölüm zaten ekrandayken
+         açılan sayfada (yenileme / geri dönüş) bir kez elle çağrılır,
+         yoksa açılış cümlesi ekranda takılı kalıp buton hiç görünmüyordu. */
+      const render = (progress: number) => {
+        /* 1 — açılış cümlesi yukarı süzülür */
+        gsap.set(stage, {
+          yPercent: progress <= 1 / 3 ? -100 * (progress / (1 / 3)) : -100,
+        });
+
+        /* 2 — etiketler merkeze toplanıp tek noktaya küçülür */
+        if (progress <= 0.5) {
+          const p = progress / 0.5;
+          const positions =
+            window.innerWidth < 1000 ? startMobile : startDesktop;
+
+          features.forEach((feature, i) => {
+            const from = positions[i];
+            gsap.set(feature, {
+              top: `${from.top + (50 - from.top) * p}%`,
+              left: `${from.left + (50 - from.left) * p}%`,
+            });
+          });
+
+          bgs.forEach((bg, i) => {
+            const size = sizes[i];
+            if (!size) return;
+            gsap.set(bg, {
+              width: `${size.width + (target - size.width) * p}px`,
+              height: `${size.height + (target - size.height) * p}px`,
+              borderRadius: `${0.5 + (25 - 0.5) * p}rem`,
+              borderWidth: `${0.125 + (0.35 - 0.125) * p}rem`,
+            });
+          });
+
+          gsap.set(contents, {
+            opacity: progress <= 0.1 ? 1 - progress / 0.1 : 0,
+          });
+        }
+
+        gsap.set(featuresWrap, { opacity: progress >= 0.5 ? 0 : 1 });
+        gsap.set(bar, { opacity: progress >= 0.5 ? 1 : 0 });
+
+        /* 3 — nokta butona açılır ve aşağı iner */
+        if (progress >= 0.5 && progress <= 0.75) {
+          const p = (progress - 0.5) / 0.25;
+          gsap.set(bar, {
+            width: `${3 + (barFinalWidth - 3) * p}rem`,
+            height: `${3 + (5 - 3) * p}rem`,
+            yPercent: -50 + 250 * p,
+          });
+        } else if (progress > 0.75) {
+          gsap.set(bar, {
+            width: `${barFinalWidth}rem`,
+            height: "5rem",
+            yPercent: 200,
+          });
+        }
+
+        /* 4 — buton yazısı ve kapanış metni belirir */
+        if (progress >= 0.75) {
+          const p = (progress - 0.75) / 0.25;
+          gsap.set(barText, { opacity: p });
+          gsap.set(headerContent, { y: -50 + 50 * p, opacity: p });
+          setReady(p > 0.6);
+        } else {
+          gsap.set(barText, { opacity: 0 });
+          gsap.set(headerContent, { y: -50, opacity: 0 });
+          setReady(false);
+        }
+      };
+
       ScrollTrigger.create({
         trigger: root,
         start: "top top",
         end: "bottom bottom",
         scrub: true,
         onRefreshInit: measure,
-        onUpdate: (self) => {
-          const progress = self.progress;
-
-          /* 1 — açılış cümlesi yukarı süzülür */
-          gsap.set(stage, {
-            yPercent: progress <= 1 / 3 ? -100 * (progress / (1 / 3)) : -100,
-          });
-
-          /* 2 — etiketler merkeze toplanıp tek noktaya küçülür */
-          if (progress <= 0.5) {
-            const p = progress / 0.5;
-            const positions =
-              window.innerWidth < 1000 ? startMobile : startDesktop;
-
-            features.forEach((feature, i) => {
-              const from = positions[i];
-              gsap.set(feature, {
-                top: `${from.top + (50 - from.top) * p}%`,
-                left: `${from.left + (50 - from.left) * p}%`,
-              });
-            });
-
-            bgs.forEach((bg, i) => {
-              const size = sizes[i];
-              if (!size) return;
-              gsap.set(bg, {
-                width: `${size.width + (target - size.width) * p}px`,
-                height: `${size.height + (target - size.height) * p}px`,
-                borderRadius: `${0.5 + (25 - 0.5) * p}rem`,
-                borderWidth: `${0.125 + (0.35 - 0.125) * p}rem`,
-              });
-            });
-
-            gsap.set(contents, {
-              opacity: progress <= 0.1 ? 1 - progress / 0.1 : 0,
-            });
-          }
-
-          gsap.set(featuresWrap, { opacity: progress >= 0.5 ? 0 : 1 });
-          gsap.set(bar, { opacity: progress >= 0.5 ? 1 : 0 });
-
-          /* 3 — nokta butona açılır ve aşağı iner */
-          if (progress >= 0.5 && progress <= 0.75) {
-            const p = (progress - 0.5) / 0.25;
-            gsap.set(bar, {
-              width: `${3 + (barFinalWidth - 3) * p}rem`,
-              height: `${3 + (5 - 3) * p}rem`,
-              yPercent: -50 + 250 * p,
-            });
-          } else if (progress > 0.75) {
-            gsap.set(bar, {
-              width: `${barFinalWidth}rem`,
-              height: "5rem",
-              yPercent: 200,
-            });
-          }
-
-          /* 4 — buton yazısı ve kapanış metni belirir */
-          if (progress >= 0.75) {
-            const p = (progress - 0.75) / 0.25;
-            gsap.set(barText, { opacity: p });
-            gsap.set(headerContent, { y: -50 + 50 * p, opacity: p });
-            setReady(p > 0.6);
-          } else {
-            gsap.set(barText, { opacity: 0 });
-            gsap.set(headerContent, { y: -50, opacity: 0 });
-            setReady(false);
-          }
-        },
+        onUpdate: (self) => render(self.progress),
+        /* Ölçü tazelendikten sonra sahneyi mevcut konuma göre yeniden
+           kur — sayfa bu bölümün ortasında açıldığında da doğru görünür. */
+        onRefresh: (self) => render(self.progress),
       });
 
       /* Bölüm statikten 400svh'ye büyüdüğü için sayfadaki diğer

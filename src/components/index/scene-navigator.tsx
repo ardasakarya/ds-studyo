@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { scenes } from "@/lib/scenes";
 import { site } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -419,6 +419,9 @@ export function SceneNavigator() {
         );
         root.style.setProperty("--frame-rotate", `${frameRotate.toFixed(2)}deg`);
         root.style.setProperty("--media-rotate", `${(-frameRotate).toFixed(2)}deg`);
+        /* Kadrajın üzerindeyken imleci izleyen "aç" işareti (bkz. .scene-cue) */
+        root.style.setProperty("--cue-x", `${event.clientX}px`);
+        root.style.setProperty("--cue-y", `${event.clientY}px`);
       });
     };
 
@@ -641,7 +644,7 @@ export function SceneNavigator() {
             >
               <div
                 ref={mediaTitleRef}
-                className="absolute inset-x-0 top-[75%] px-3 will-change-transform sm:top-[78%] sm:px-0"
+                className="absolute inset-x-0 top-[77%] px-3 will-change-transform sm:top-[78%] sm:px-0"
               >
                 <h1
                   className={cn(
@@ -658,10 +661,12 @@ export function SceneNavigator() {
         </Link>
       </div>
 
-      {/* Dev başlık — tıklanınca yükselip görselin üzerine biner */}
+      {/* Dev başlık — tıklanınca yükselip görselin üzerine biner.
+          Dar ekranda biraz daha aşağıda durur: claim'ler yukarı alındığı
+          için başlıkla üst üste binmiyorlar. */}
       <div
         ref={titleRef}
-        className="pointer-events-none absolute inset-x-0 top-[75%] z-[5] px-3 will-change-transform sm:top-[78%] sm:px-0"
+        className="pointer-events-none absolute inset-x-0 top-[77%] z-[5] px-3 will-change-transform sm:top-[78%] sm:px-0"
       >
         <h1
           className={cn(
@@ -695,7 +700,10 @@ export function SceneNavigator() {
           </span>
         </div>
 
-        <div className="pointer-events-none absolute bottom-[26vh] left-4 sm:top-1/2 sm:bottom-auto sm:left-[15%] sm:-translate-y-1/2">
+        {/* Dar ekranda iki claim AYNI satırda (biri solda, biri sağda) ve
+            başlığın epey üstünde durur; masaüstünde eskisi gibi görselin
+            iki yanına, dikey ortaya yerleşirler. */}
+        <div className="pointer-events-none absolute bottom-[30vh] left-4 sm:top-1/2 sm:bottom-auto sm:left-[15%] sm:-translate-y-1/2">
           <p
             className={cn(
               "roll claim max-w-[10rem] text-left sm:text-center",
@@ -710,7 +718,7 @@ export function SceneNavigator() {
             </span>
           </p>
         </div>
-        <div className="pointer-events-none absolute right-4 bottom-[18vh] sm:top-1/2 sm:right-[13%] sm:bottom-auto sm:-translate-y-1/2">
+        <div className="pointer-events-none absolute right-4 bottom-[30vh] sm:top-1/2 sm:right-[13%] sm:bottom-auto sm:-translate-y-1/2">
           <p
             className={cn(
               "roll claim max-w-[10rem] text-right sm:text-center",
@@ -728,7 +736,7 @@ export function SceneNavigator() {
 
         <nav
           aria-label="Sahneler"
-          className="pointer-events-auto absolute right-4 bottom-[10vh] flex flex-col items-end gap-2 sm:right-[23px] sm:bottom-[6vh]"
+          className="pointer-events-auto absolute right-4 bottom-[5vh] flex flex-col items-end gap-2 sm:right-[23px] sm:bottom-[6vh]"
         >
           {scenes.map((scene, i) => (
             <button
@@ -752,18 +760,34 @@ export function SceneNavigator() {
           ))}
         </nav>
 
-        <Link
-          href={active.href}
-          onClick={enter}
-          className="edge-note group absolute bottom-[10vh] left-4 inline-flex items-center gap-2 text-fg transition-colors hover:text-accent-soft sm:bottom-[6vh] sm:left-[23px]"
-        >
-          gir
-          <ArrowRight
-            className="size-4 transition-transform duration-300 group-hover:translate-x-1"
-            strokeWidth={1.5}
-            aria-hidden
-          />
-        </Link>
+        {/* Sahnelerin birer sayfa olduğunu söyleyen tek satır. Emir kipi yok:
+            kuralı söylüyor, "gir" da yanında duruyor. */}
+        <div className="absolute bottom-[5vh] left-4 flex flex-col items-start gap-1.5 sm:bottom-[6vh] sm:left-[23px] sm:flex-row sm:items-center sm:gap-4">
+          <p className="scene-hint">her sahne bir sayfa</p>
+
+          <Link
+            href={active.href}
+            onClick={enter}
+            /* DİKKAT: kapsayıcı `pointer-events-none`; bu link kendi
+               olaylarını geri açmazsa imleç bile değişmiyor — bağlantı
+               olduğu hiç belli olmuyordu. */
+            className="edge-note group pointer-events-auto inline-flex items-center gap-2 text-fg transition-colors hover:text-accent-soft"
+          >
+            gir
+            <ArrowRight
+              className="size-4 transition-transform duration-300 group-hover:translate-x-1"
+              strokeWidth={1.5}
+              aria-hidden
+            />
+          </Link>
+        </div>
+
+        {/* Sözsüz kısmı: kadrajın üzerine gelince imleci izleyen "aç" rozeti.
+            Dokunmatikte imleç yok — fotoğrafın ortasında sabit durur. */}
+        <span className="scene-cue" aria-hidden>
+          aç
+          <ArrowUpRight className="size-3.5" strokeWidth={1.5} />
+        </span>
       </div>
 
       {/* Açılış — marka adının iki parçası, ortada sabit duran "&" */}

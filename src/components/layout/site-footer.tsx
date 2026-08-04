@@ -316,7 +316,14 @@ export function SiteFooter() {
       }
       writeTransforms();
 
+      /* Footer açık mı? Açılış/kapanış birden fazla kez tetiklenebiliyor
+         (onEnter + her ScrollTrigger.refresh); tween'ler baştan başlayıp
+         yazıları zıplatmasın diye tek yönlü kapı. */
+      let shown = false;
+
       const animateIn = () => {
+        if (shown) return;
+        shown = true;
         startLoop();
         if (reduced) return;
         gsap.to(reveal, {
@@ -344,7 +351,12 @@ export function SiteFooter() {
       };
 
       const animateOut = () => {
-        if (reduced) return;
+        if (!shown) return;
+        shown = false;
+        if (reduced) {
+          stopLoop();
+          return;
+        }
         gsap.to(reveal, {
           left: -125,
           right: 125,
@@ -373,6 +385,15 @@ export function SiteFooter() {
         trigger: revealer,
         start: "top 50%",
         onEnter: animateIn,
+        /* ÖNEMLİ: `onEnter` yalnızca eşik GEÇİLİRKEN çalışır. Sayfa zaten
+           aşağıdayken açılırsa (yenileme, geri dönüş, #bağlantıyla giriş)
+           hiç tetiklenmez ve footer bomboş kalırdı — yazılar ekranın
+           altında, eller kenarda asılı. Tazelemede konumu okuyup gerekirse
+           açıyoruz. */
+        onRefresh: (self) => {
+          if (self.isActive || self.progress > 0) animateIn();
+          else animateOut();
+        },
       });
 
       ScrollTrigger.create({

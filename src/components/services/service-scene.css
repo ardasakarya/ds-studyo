@@ -53,6 +53,12 @@
   }
 }
 
+/* Sahne sayacı yalnızca sabitlenen sahne düzeninde anlamlı; ızgarada
+   (dar ekran / hareket azaltılmış / JS yok) hiç görünmez. */
+.svc-scene-progress {
+  display: none;
+}
+
 /* ---- Kart ---- */
 .svc-card {
   min-width: 0;
@@ -128,6 +134,31 @@
   opacity: 0.88;
   pointer-events: none;
   transition: opacity 0.5s var(--ease-out-soft);
+}
+
+/* Silme çizgisi — kesiğin tam üstünde yukarı doğru yürür.
+   Konumu (bottom) ve görünürlüğü ServiceScene'deki zaman çizelgesinden
+   sürülür; sahne düzeni dışında hiç görünmez. */
+.svc-card-edge {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 3;
+  display: none;
+  height: 2px;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent) 22%,
+    #fff 50%,
+    var(--color-accent) 78%,
+    transparent
+  );
+  box-shadow:
+    0 0 14px 2px color-mix(in oklab, var(--color-accent) 62%, transparent),
+    0 0 40px 10px color-mix(in oklab, var(--color-accent) 26%, transparent);
 }
 
 .svc-card-no {
@@ -382,5 +413,95 @@
   /* Sahnede kart sütunu ekrandan uzun; görsel oranını koruyup ortalanır */
   .svc-card-media {
     margin-block: auto;
+  }
+
+  .svc-card-edge {
+    display: block;
+  }
+
+  /* Açılan kart kısa bir vurgu alır: çerçeve kum rengine döner ve kart
+     hafifçe öne gelir. Kullanıcı "yeni bir kart geldi"yi böyle anlar. */
+  /* `both` YOK: animasyon bitince kart temel stiline döner, yoksa
+     forwards dolgusu hover'daki yükselmeyi kalıcı olarak ezerdi. */
+  .svc-card[data-enter="true"] .svc-card-media {
+    animation: svc-card-enter 900ms var(--ease-out-soft);
+  }
+
+  .svc-card[data-enter="true"] .svc-card-no {
+    animation: svc-no-enter 900ms var(--ease-out-soft);
+  }
+
+  /* ---- Sahne sayacı ---- */
+  .svc-scene-progress {
+    position: absolute;
+    top: clamp(2rem, 4.5vh, 3.2rem);
+    left: clamp(1.25rem, 4vw, 3.5rem);
+    right: clamp(1.25rem, 4vw, 3.5rem);
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-fg-faint);
+    pointer-events: none;
+  }
+
+  .svc-scene-progress-count {
+    min-width: 2ch;
+    color: var(--color-accent);
+  }
+
+  .svc-scene-progress-track {
+    display: flex;
+    flex: 1;
+    gap: 0.4rem;
+  }
+
+  .svc-scene-progress-step {
+    flex: 1;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--color-line);
+    transition:
+      background-color 0.45s var(--ease-out-soft),
+      box-shadow 0.45s var(--ease-out-soft);
+  }
+
+  .svc-scene-progress-step[data-on="true"] {
+    background: var(--color-accent);
+    box-shadow: 0 0 12px color-mix(in oklab, var(--color-accent) 45%, transparent);
+  }
+}
+
+@keyframes svc-card-enter {
+  0% {
+    border-color: var(--color-accent);
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--color-accent) 55%, transparent),
+      0 0 46px color-mix(in oklab, var(--color-accent) 32%, transparent);
+    transform: translateY(6px) scale(0.985);
+  }
+  45% {
+    border-color: color-mix(in oklab, var(--color-accent) 70%, var(--color-line));
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    border-color: var(--color-line);
+    box-shadow: none;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes svc-no-enter {
+  0% {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+  100% {
+    border-color: var(--color-line);
+    color: var(--color-fg-muted);
   }
 }

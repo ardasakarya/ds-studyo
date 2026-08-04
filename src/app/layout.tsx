@@ -10,6 +10,7 @@ import {
   HideOnContactRoutes,
 } from "@/components/layout/route-gate";
 import { RevealEngine } from "@/components/reveal-engine";
+import { ScrollRefresh } from "@/components/layout/scroll-refresh";
 import { SmoothScroll } from "@/components/providers/smooth-scroll";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
@@ -85,6 +86,7 @@ export default function RootLayout({
         <ThemeProvider>
           <SmoothScroll />
           <RevealEngine />
+          <ScrollRefresh />
           <Header />
 
           {/* Sayfa katmanı opak ve footer'ın üstünde; sonundaki boşluk

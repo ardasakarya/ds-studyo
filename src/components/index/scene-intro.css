@@ -71,3 +71,88 @@
   display: block;
   will-change: transform;
 }
+
+/* ------------------------------------------------------------------
+   "Buraya girilir" işaretleri.
+   Sahnelerin birer sayfa olduğu hiçbir yerde yazmıyordu; ziyaretçiler
+   fotoğrafın tıklanabilir olduğunu fark etmiyordu.
+------------------------------------------------------------------ */
+
+/* Kuralı söyleyen tek satır — "gir" bağlantısının yanında durur. */
+.scene-hint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1.2;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+}
+
+/* İmleci izleyen rozet. Konumu `--cue-x/--cue-y`den gelir (SceneNavigator'ın
+   parallax rAF'ı yazar); yalnızca kadrajın üzerindeyken görünür. */
+.scene-cue {
+  position: absolute;
+  top: var(--cue-y, 50%);
+  left: var(--cue-x, 50%);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  translate: -50% -50%;
+  border: 1px solid color-mix(in oklab, var(--color-accent) 55%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-ink-950) 58%, transparent);
+  backdrop-filter: blur(10px);
+  padding: 0.7rem 1.05rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-accent);
+  opacity: 0;
+  scale: 0.8;
+  pointer-events: none;
+  transition:
+    opacity 0.32s var(--ease-out-soft),
+    scale 0.32s var(--ease-out-soft);
+}
+
+.scene-navigator:has([data-testid="scene-frame"]:hover) .scene-cue {
+  opacity: 1;
+  scale: 1;
+}
+
+/* Dokunmatik: imleç yok, hover da yok — rozet fotoğrafın ortasında sabit
+   durur ve yavaşça nefes alır. */
+@media (hover: none) {
+  .scene-cue {
+    /* Fotoğrafın tam ortasını kapatmasın: alt yarıya, claim'lerin üstüne. */
+    top: 56%;
+    left: 50%;
+    opacity: 1;
+    scale: 1;
+    animation: scene-cue-breathe 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes scene-cue-breathe {
+  0%,
+  100% {
+    opacity: 0.62;
+    scale: 0.96;
+  }
+  50% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-cue {
+    animation: none;
+    transition: none;
+  }
+}

@@ -293,6 +293,9 @@ function ProfileCardComponent({
     shell.addEventListener("pointerenter", handlePointerEnter);
     shell.addEventListener("pointermove", handlePointerMove);
     shell.addEventListener("pointerleave", handlePointerLeave);
+    /* Dokunmatikte kaydırma başlayınca `pointerleave` gelmez, `pointercancel`
+       gelir. Bunu dinlemezsek kart "active" hâlde takılı kalıyor. */
+    shell.addEventListener("pointercancel", handlePointerLeave);
 
     const handleClick = () => {
       if (!enableMobileTilt || location.protocol !== "https:") return;
@@ -328,6 +331,7 @@ function ProfileCardComponent({
       shell.removeEventListener("pointerenter", handlePointerEnter);
       shell.removeEventListener("pointermove", handlePointerMove);
       shell.removeEventListener("pointerleave", handlePointerLeave);
+      shell.removeEventListener("pointercancel", handlePointerLeave);
       shell.removeEventListener("click", handleClick);
       window.removeEventListener("deviceorientation", handleDeviceOrientation);
       if (enterTimerRef.current) window.clearTimeout(enterTimerRef.current);
