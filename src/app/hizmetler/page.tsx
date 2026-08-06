@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/page-hero";
 import { ServiceScene } from "@/components/services/service-scene";
+import { CraftNotes } from "@/components/services/craft-notes";
 import { Capabilities } from "@/components/home/capabilities";
 import { serviceGroups, services } from "@/lib/data";
 
@@ -42,6 +43,8 @@ export default function ServicesPage() {
       </section>
 
       <ServiceScene services={services} />
+
+      <CraftNotes />
 
       <Capabilities />
     </>

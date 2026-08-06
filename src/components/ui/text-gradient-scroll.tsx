@@ -74,7 +74,7 @@ export function TextGradientScroll({
             trigger: track,
             start: "top top",
             end: "bottom bottom",
-            scrub: 0.62,
+            scrub: 0.45,
             invalidateOnRefresh: true,
           },
         })
@@ -105,9 +105,11 @@ export function TextGradientScroll({
   }, [initialOpacity, side, type, words]);
 
   return (
+    /* Parkur boyu = animasyonun hızı. 175svh biraz ağır kalıyordu;
+       150svh ile aynı animasyon daha az kaydırmada tamamlanıyor. */
     <section
       ref={trackRef}
-      className="relative min-h-[175svh]"
+      className="relative min-h-[150svh]"
       aria-labelledby={titleId}
     >
       <div className="sticky top-0 h-[100svh] overflow-hidden">

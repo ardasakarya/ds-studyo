@@ -90,7 +90,7 @@ export function TeamLanyards() {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <span className="chapter">ekip / 06</span>
-            <h2 className="display mt-6 max-w-[11ch] -rotate-2 text-[clamp(3rem,7vw,7.5rem)]">
+            <h2 className="display mt-6 max-w-[11ch] -rotate-2 text-[clamp(2.2rem,4.6vw,4.2rem)]">
               Kodu yazan ekip.
             </h2>
           </div>

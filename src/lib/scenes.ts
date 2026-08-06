@@ -17,9 +17,21 @@ export type Scene = {
 
 import { asset } from "@/lib/asset";
 
+/* Sıra kullanıcının istediği gibi: önce kim olduğumuz, sonra ne yaptığımız,
+   yaptıklarımız, fiyatı ve iletişim. `no` alanı bu sırayı takip eder. */
 export const scenes: Scene[] = [
   {
     no: "01",
+    title: "Hakkımızda",
+    href: "/hakkimizda",
+    imageDarkTheme: asset("/scenes/hakkimizda-koyu.webp"),
+    imageLightTheme: asset("/scenes/hakkimizda-aydinlik.webp"),
+    alt: "Yazılım mimarisi üzerinde çalışan iki geliştirici",
+    left: ["iki kişilik", "çekirdek"],
+    right: ["kurumsal", "disiplin"],
+  },
+  {
+    no: "02",
     title: "Hizmetler",
     href: "/hizmetler",
     imageDarkTheme: asset("/scenes/hizmetler-koyu.webp"),
@@ -29,7 +41,7 @@ export const scenes: Scene[] = [
     right: ["tek ekip,", "tek muhatap"],
   },
   {
-    no: "02",
+    no: "03",
     title: "Referanslar",
     href: "/referanslar",
     imageDarkTheme: asset("/scenes/referanslar-koyu.webp"),
@@ -39,7 +51,7 @@ export const scenes: Scene[] = [
     right: ["hepsi canlı,", "hepsi ölçülü"],
   },
   {
-    no: "03",
+    no: "04",
     title: "Paketler",
     href: "/paketler",
     imageDarkTheme: asset("/scenes/paketler-koyu.webp"),
@@ -47,16 +59,6 @@ export const scenes: Scene[] = [
     alt: "Üç farklı yazılım paketini temsil eden ekranların bulunduğu çalışma masası",
     left: ["şeffaf fiyat,", "sabit kapsam"],
     right: ["sürpriz", "kalem yok"],
-  },
-  {
-    no: "04",
-    title: "Hakkımızda",
-    href: "/hakkimizda",
-    imageDarkTheme: asset("/scenes/hakkimizda-koyu.webp"),
-    imageLightTheme: asset("/scenes/hakkimizda-aydinlik.webp"),
-    alt: "Yazılım mimarisi üzerinde çalışan iki geliştirici",
-    left: ["iki kişilik", "çekirdek"],
-    right: ["kurumsal", "disiplin"],
   },
   {
     no: "05",

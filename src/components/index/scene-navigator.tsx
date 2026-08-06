@@ -734,9 +734,12 @@ export function SceneNavigator() {
           </p>
         </div>
 
+        {/* Sayfa listesi — hangi sayfalar olduğu ve hangisinde olunduğu
+            buradan okunur. Aktif satır kum rengi ve uzun çizgili, diğerleri
+            soluk. */}
         <nav
           aria-label="Sahneler"
-          className="pointer-events-auto absolute right-4 bottom-[5vh] flex flex-col items-end gap-2 sm:right-[23px] sm:bottom-[6vh]"
+          className="scene-pager pointer-events-auto absolute right-4 bottom-[5vh] sm:right-[23px] sm:bottom-[6vh]"
         >
           {scenes.map((scene, i) => (
             <button
@@ -747,15 +750,11 @@ export function SceneNavigator() {
                 goTo(i);
               }}
               aria-current={i === index}
-              aria-label={`${scene.title} sahnesi`}
-              className="flex items-center gap-2 py-1"
+              data-on={i === index}
+              className="scene-pager-item"
             >
-              <span
-                className={cn(
-                  "h-px transition-all duration-500",
-                  i === index ? "w-8 bg-fg" : "w-3 bg-fg-faint/60",
-                )}
-              />
+              <span className="scene-pager-label">{scene.title}</span>
+              <span className="scene-pager-bar" aria-hidden />
             </button>
           ))}
         </nav>

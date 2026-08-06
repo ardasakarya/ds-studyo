@@ -35,6 +35,16 @@ export const menuScenes: MenuScene[] = [
     ],
   },
   {
+    href: "/hakkimizda",
+    tagline: "İki kişilik çekirdek ekip",
+    bg: asset("/scenes/hakkimizda-software-2x.webp"),
+    images: [
+      { src: asset("/scenes/hakkimizda-light-v2.webp"), area: "3 / 7 / 8 / 11", dir: "right" },
+      { src: asset("/scenes/hakkimizda-software-2x.webp"), area: "1 / 4 / 5 / 7", dir: "bottom" },
+      { src: asset("/scenes/referanslar-software-2x.webp"), area: "6 / 2 / 11 / 5", dir: "right" },
+    ],
+  },
+  {
     href: "/hizmetler",
     tagline: "Fikirden yayına, 15 hizmet",
     bg: asset("/scenes/hizmetler-software-2x.webp"),
@@ -62,16 +72,6 @@ export const menuScenes: MenuScene[] = [
       { src: asset("/scenes/paketler-light-v2.webp"), area: "7 / 6 / 10 / 9", dir: "left" },
       { src: asset("/scenes/paketler-software-2x.webp"), area: "4 / 1 / 10 / 4", dir: "right" },
       { src: asset("/references/by-kurtulus.jpg"), area: "2 / 5 / 6 / 10", dir: "right" },
-    ],
-  },
-  {
-    href: "/hakkimizda",
-    tagline: "İki kişilik çekirdek ekip",
-    bg: asset("/scenes/hakkimizda-software-2x.webp"),
-    images: [
-      { src: asset("/scenes/hakkimizda-light-v2.webp"), area: "3 / 7 / 8 / 11", dir: "right" },
-      { src: asset("/scenes/hakkimizda-software-2x.webp"), area: "1 / 4 / 5 / 7", dir: "bottom" },
-      { src: asset("/scenes/referanslar-software-2x.webp"), area: "6 / 2 / 11 / 5", dir: "right" },
     ],
   },
   {

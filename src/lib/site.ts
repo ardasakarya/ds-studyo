@@ -29,13 +29,17 @@ export const site = {
   ],
 } as const;
 
-/** Menü sırası: anasayfa → hizmetler → referanslar → paketler → hakkımızda → iletişim */
+/**
+ * Menü sırası — anasayfadaki sahne sırasıyla AYNI olmalı (bkz. lib/scenes.ts):
+ * anasayfa → hakkımızda → hizmetler → referanslar → paketler → iletişim.
+ * Site footer'ındaki bağlantılar da bu diziden besleniyor.
+ */
 export const mainNav = [
   { label: "Anasayfa", href: "/" },
+  { label: "Hakkımızda", href: "/hakkimizda" },
   { label: "Hizmetler", href: "/hizmetler" },
   { label: "Referanslar", href: "/referanslar" },
   { label: "Paketler", href: "/paketler" },
-  { label: "Hakkımızda", href: "/hakkimizda" },
   { label: "İletişim", href: "/iletisim" },
 ] as const;
 

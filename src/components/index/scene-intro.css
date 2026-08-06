@@ -138,6 +138,101 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   Sayfa listesi (sağ alt)
+   Eskiden yalnızca çizgilerdi; hangi sayfaların olduğu hiç yazmıyordu.
+   Artık sayfa adları da var: aktif olan kum rengi ve uzun çizgili,
+   diğerleri soluk.
+------------------------------------------------------------------ */
+.scene-pager {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.55rem;
+}
+
+.scene-pager-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  padding-block: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-fg-faint);
+  cursor: pointer;
+  transition: color 0.4s var(--ease-out-soft);
+}
+
+.scene-pager-item:hover,
+.scene-pager-item:focus-visible {
+  color: var(--color-fg-muted);
+}
+
+.scene-pager-item[data-on="true"] {
+  color: var(--color-accent);
+}
+
+.scene-pager-label {
+  opacity: 0.55;
+  transition:
+    opacity 0.4s var(--ease-out-soft),
+    letter-spacing 0.4s var(--ease-out-soft);
+}
+
+.scene-pager-item:hover .scene-pager-label,
+.scene-pager-item:focus-visible .scene-pager-label {
+  opacity: 0.8;
+}
+
+.scene-pager-item[data-on="true"] .scene-pager-label {
+  opacity: 1;
+  letter-spacing: 0.14em;
+}
+
+.scene-pager-bar {
+  display: block;
+  width: 0.9rem;
+  height: 2px;
+  flex: none;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.45;
+  transition:
+    width 0.5s var(--ease-out-soft),
+    opacity 0.4s var(--ease-out-soft);
+}
+
+.scene-pager-item[data-on="true"] .scene-pager-bar {
+  width: 2.2rem;
+  opacity: 1;
+}
+
+/* Dar ekranda liste, başlıkla çakışmayacak kadar kompakt. */
+@media (max-width: 39.99em) {
+  .scene-pager {
+    gap: 0.4rem;
+  }
+
+  .scene-pager-item {
+    gap: 0.5rem;
+    padding-block: 0.1rem;
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+  }
+
+  .scene-pager-bar {
+    width: 0.7rem;
+  }
+
+  .scene-pager-item[data-on="true"] .scene-pager-bar {
+    width: 1.6rem;
+  }
+}
+
 @keyframes scene-cue-breathe {
   0%,
   100% {

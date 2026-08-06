@@ -105,7 +105,7 @@ const allServices: Service[] = [
     tech: ["Next.js", "TypeScript", "Tailwind CSS", "GSAP", "Vercel"],
     priceFrom: "₺14.900",
     timeline: "1–4 hafta",
-    relatedProjects: ["merada-gayrimenkul", "denizhan-medical", "elit-profil"],
+    relatedProjects: ["merada-yonetim", "denizhan-medical", "elit-profil"],
   },
   {
     slug: "web-uygulamasi",
@@ -142,7 +142,7 @@ const allServices: Service[] = [
     tech: ["Next.js", "Node.js", "PostgreSQL", "MySQL", "Supabase"],
     priceFrom: "₺69.900",
     timeline: "6–12 hafta",
-    relatedProjects: ["merada-yonetim", "diamond-tourism"],
+    relatedProjects: ["diamond-tourism", "merada-gayrimenkul"],
   },
   {
     slug: "mobil-uygulama",
@@ -252,7 +252,7 @@ const allServices: Service[] = [
     tech: ["Next.js", "Node.js", "Python", "PostgreSQL", "Docker"],
     priceFrom: "₺24.900",
     timeline: "2–12 hafta",
-    relatedProjects: ["merada-yonetim"],
+    relatedProjects: ["merada-gayrimenkul"],
   },
   {
     slug: "yapay-zeka",
@@ -324,7 +324,7 @@ const allServices: Service[] = [
     tech: ["Next.js", "Stripe", "PostgreSQL", "Supabase", "Docker"],
     priceFrom: "₺79.900",
     timeline: "8–14 hafta",
-    relatedProjects: ["merada-yonetim"],
+    relatedProjects: ["merada-gayrimenkul"],
   },
   {
     slug: "masaustu-uygulama",
@@ -549,7 +549,7 @@ const allServices: Service[] = [
     tech: ["Figma", "Framer", "Maze"],
     priceFrom: "₺19.900",
     timeline: "2–5 hafta",
-    relatedProjects: ["elit-profil", "denizhan-medical"],
+    relatedProjects: ["elit-profil", "merada-yonetim"],
   },
   {
     slug: "bakim-destek",
@@ -664,30 +664,30 @@ export const projects: Project[] = [
     slug: "merada-yonetim",
     no: "02",
     title: "Merada Yönetim",
-    category: "Site yönetimi · Web uygulaması",
+    category: "Site yönetimi · Kurumsal tanıtım",
     domain: "meradayonetim.com",
     href: "https://meradayonetim.com/",
     image: asset("/references/merada-yonetim.jpg"),
     year: "2025",
     summary:
-      "Apartman ve site yönetimi için aidat, gider ve duyuru akışını tek panelde toplayan platform.",
+      "Apartman ve site yönetimi firmasının hizmetlerini anlatan tanıtım sitesi.",
     challenge:
-      "Aidat takibi Excel'de, duyurular WhatsApp'ta; sakinlerin sorularına cevap vermek saatler alıyordu.",
+      "Firmanın dijitalde bir adresi yoktu; hangi hizmeti nasıl verdikleri her görüşmede baştan anlatılıyordu.",
     solution:
-      "Rol bazlı panel: yönetici gider ve aidat girer, sakin kendi hesabını ve duyuruları görür.",
+      "Hizmetleri sırayla açan, kaydırdıkça ilerleyen tek sayfalık tanıtım sitesi. Sonunda tek adımlık iletişim formu.",
     highlights: [
-      "Yönetici ve sakin için rol bazlı iki ayrı panel",
-      "Aidat, gider ve borç kalemlerinin dijital takibi",
-      "Sakinlere açık duyuru ve talep akışı",
-      "Excel + WhatsApp trafiğini bitiren tek merkez",
+      "Kaydırmayla ilerleyen tanıtım kurgusu",
+      "Hizmetlerin tek tek anlatıldığı bölümler",
+      "Telefonda ilk açılışta yüklenen hafif sayfa",
+      "Doğrudan teklif isteğine giden iletişim formu",
     ],
     results: [
-      { value: "%70", label: "Daha az manuel takip" },
-      { value: "Tek panel", label: "Aidat + gider + duyuru" },
-      { value: "7/24", label: "Sakin erişimi" },
+      { value: "Tek sayfa", label: "Baştan sona tanıtım" },
+      { value: "Sıfırdan", label: "Projeye özel tasarım" },
+      { value: "Mobil", label: "Önce telefon düzeni" },
     ],
-    services: ["web-uygulamasi", "ozel-yazilim"],
-    stack: ["React", "Vite", "Node.js", "MySQL"],
+    services: ["web-sitesi", "ui-ux"],
+    stack: ["React", "Vite", "GSAP"],
     featured: true,
   },
   {
@@ -902,6 +902,22 @@ export const comparison = {
       values: ["Alışkanlığa göre", "Kurumsal ve ağır", "Projeye göre seçilir"],
     },
     {
+      label: "Tasarım",
+      values: [
+        "Hazır tema üzerine",
+        "Şablon kütüphanesinden",
+        "Projeye özel, sıfırdan çizilir",
+      ],
+    },
+    {
+      label: "Yönetim paneli",
+      values: [
+        "Çoğu zaman yok",
+        "Standart kurgu",
+        "Sizin iş akışınıza göre kurulur",
+      ],
+    },
+    {
       label: "Kod sahipliği",
       values: ["Belirsiz", "Ajansta kalabilir", "Tamamen sizin"],
     },
@@ -916,10 +932,15 @@ export const comparison = {
 /* Rakamlar                                                            */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Hepsi sayfadaki başka bir sözle doğrulanabilir olsun:
+ * 48 saat = teklif vaadi, 7 = referans + yayındaki işler, 6 = referans
+ * sayfasındaki sektörler, 3 hafta = kurumsal site teslim süresi.
+ */
 export const stats = [
-  { value: 24, suffix: "+", label: "Teslim edilen proje" },
-  { value: 6, suffix: "", label: "Canlı yayında ürün" },
-  { value: 99.9, suffix: "%", label: "Ortalama uptime" },
+  { value: 48, suffix: " saat", label: "Teklife dönüş süresi" },
+  { value: 7, suffix: "", label: "Yayında olan ürün" },
+  { value: 6, suffix: "", label: "Çalıştığımız sektör" },
   { value: 3, suffix: " hafta", label: "Ortalama teslim süresi" },
 ] as const;
 
@@ -997,7 +1018,7 @@ export const testimonials = [
   },
   {
     quote:
-      "Aidat takibini Excel'den panele taşımak sandığımızdan kolay oldu. Sakinler artık bizi aramadan her şeyi görüyor.",
+      "Ne iş yaptığımızı anlatmak için artık site linkini gönderiyoruz. Görüşmeye gelen insan konuyu bilerek geliyor.",
     author: "Site yöneticisi",
     role: "Merada Yönetim",
     project: "merada-yonetim",
@@ -1047,6 +1068,14 @@ export const faqs = [
   {
     q: "Uzaktan çalışıyor musunuz?",
     a: "Evet, Türkiye'nin her yerinden müşteriyle çalışıyoruz. Görüşmeler online, gerektiğinde yerinde toplantı yapıyoruz.",
+  },
+  {
+    q: "Tasarımı hazır şablondan mı yapıyorsunuz?",
+    a: "Hayır. Hazır tema ya da yapay zekâ çıktısı kullanmıyoruz. Her projeye kendi tasarımını kuruyor, markanın rengiyle, yazısıyla ve anlatısıyla tek tek çalışıyoruz. Bu yüzden iki işimiz birbirine benzemiyor.",
+  },
+  {
+    q: "Yönetim paneli herkeste aynı mı oluyor?",
+    a: "Hayır. Önce günlük işinizi dinliyoruz: neyi kaç kere yapıyorsunuz, nerede vakit kaybediyorsunuz. Panel bunun etrafında kuruluyor; en sık yaptığınız iş en az tıklamayla bitiyor.",
   },
 ] as const;
 

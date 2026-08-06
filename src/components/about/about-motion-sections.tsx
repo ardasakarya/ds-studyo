@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Counter } from "@/components/ui/counter";
@@ -11,6 +11,14 @@ const principles = [
   {
     title: "Aracı yok",
     body: "Müşteri temsilcisiyle değil, kodu yazan ekiple konuşursunuz. Karar bir toplantıda alınır.",
+  },
+  {
+    title: "Tasarım kopyalanmaz",
+    body: "Hazır şablon ya da yapay zekâ çıktısı kullanmıyoruz. Her proje için ayrı bir tasarım kurup üstünde tek tek çalışıyoruz.",
+  },
+  {
+    title: "Panel size göre",
+    body: "Yönetim paneli herkese aynı gelmiyor. Hangi işi en sık yapıyorsanız panel onun etrafında kuruluyor.",
   },
   {
     title: "Şeffaf fiyat",
@@ -39,8 +47,25 @@ const values = [
     title: "Sürdürülebilir tempo",
     body: "Gerçekçi tarih veriyoruz. Verdiğimiz tarihi de tutuyoruz.",
   },
+  {
+    title: "Tasarıma emek",
+    body: "Her projeye kendi tasarımını kuruyoruz. Şablon çoğaltmak yerine markanın diline uyan bir arayüz çıkarıyoruz.",
+  },
+  {
+    title: "İşi kolaylaştıran panel",
+    body: "Paneli sizin gününüze bakarak kuruyoruz. En çok tekrarladığınız iş, en az tıklamayla yapılsın istiyoruz.",
+  },
 ] as const;
 
+/**
+ * Harf harf animasyon i\u00e7in ba\u015fl\u0131\u011f\u0131 b\u00f6ler.
+ *
+ * D\u0130KKAT: harfler `inline-block` oldu\u011fu i\u00e7in taray\u0131c\u0131 sat\u0131r\u0131 \u0130K\u0130 HARF\u0130N
+ * ARASINDAN da k\u0131rabiliyordu \u2014 "S\u00fcrd\u00fcr\u00fclebilir tempo" gibi ba\u015fl\u0131klar
+ * kelimenin ortas\u0131ndan ikiye ayr\u0131l\u0131yordu. Bu y\u00fczden \u00f6nce kelimelere
+ * b\u00f6l\u00fcn\u00fcp her kelime `whitespace-nowrap` bir kutuya al\u0131n\u0131r; sat\u0131r sonu
+ * yaln\u0131zca kelime aralar\u0131nda olu\u015fur.
+ */
 function AnimatedTitle({
   children,
   unit,
@@ -49,18 +74,26 @@ function AnimatedTitle({
   unit: "value" | "process";
 }) {
   const attribute = unit === "value" ? "data-value-char" : "data-process-char";
+  const words = children.split(" ");
 
   return (
     <span aria-label={children}>
-      {Array.from(children).map((character, index) => (
-        <span
-          key={`${character}-${index}`}
-          {...{ [attribute]: "" }}
-          aria-hidden="true"
-          className={character === " " ? "inline" : "inline-block"}
-        >
-          {character === " " ? "\u00a0" : character}
-        </span>
+      {words.map((word, wordIndex) => (
+        <Fragment key={`${word}-${wordIndex}`}>
+          <span aria-hidden="true" className="inline-block whitespace-nowrap">
+            {Array.from(word).map((character, index) => (
+              <span
+                key={`${character}-${index}`}
+                {...{ [attribute]: "" }}
+                className="inline-block"
+              >
+                {character}
+              </span>
+            ))}
+          </span>
+          {/* K\u0131r\u0131lma noktas\u0131: bo\u015fluk nowrap kutusunun DI\u015eINDA duruyor. */}
+          {wordIndex < words.length - 1 ? " " : null}
+        </Fragment>
       ))}
     </span>
   );
@@ -154,14 +187,21 @@ export function AboutMotionSections() {
 
   return (
     <div ref={rootRef}>
-      <section className="section overflow-hidden">
+      {/* `overflow-hidden` DEĞİL `overflow-x-clip`: hidden, içindeki
+          `position: sticky` başlığı kendi kutusuna hapsedip çalışmaz hâle
+          getiriyor. `clip` yatayda taşmayı yine keser ama scroll kabı
+          oluşturmadığı için sticky sayfa akışıyla çalışır. */}
+      <section className="section overflow-x-clip">
         <div className="shell grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
-          <SectionHeading
-            no="02"
-            eyebrow="manifesto"
-            lines={["Doğrudan ekip,", "net sorumluluk."]}
-            description="Küçük bir ekibiz ve bunu avantaja çeviriyoruz: işi kim yapıyorsa onunla konuşuyorsunuz. Aracı az, karar hızlı, sorumluluk net."
-          />
+          {/* Başlık listeyle birlikte kaymaz: liste akıp giderken üstte kalır. */}
+          <div className="lg:sticky lg:top-[16vh] lg:self-start">
+            <SectionHeading
+              no="02"
+              eyebrow="manifesto"
+              lines={["Doğrudan ekip,", "net sorumluluk."]}
+              description="Küçük bir ekibiz ve bunu avantaja çeviriyoruz: işi kim yapıyorsa onunla konuşuyorsunuz. Aracı az, karar hızlı, sorumluluk net."
+            />
+          </div>
 
           <ul className="flex flex-col gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line shadow-[0_30px_90px_rgb(var(--shadow-rgb)/calc(0.28*var(--shadow-strength)))]">
             {principles.map((principle, index) => (
@@ -186,7 +226,7 @@ export function AboutMotionSections() {
           <SectionHeading
             eyebrow="sayılarla"
             lines={["Söz değil,", "çalışan ürün."]}
-            description="Ürettiğimiz işin sonucunu teslim edilen proje, canlı ürün ve ölçülebilir performansla takip ediyoruz."
+            description="Ekibin büyüklüğünden teslim süresine kadar, abartmadan sayabildiğimiz şeyler."
           />
 
           <dl className="mt-12 grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
@@ -216,7 +256,7 @@ export function AboutMotionSections() {
           <SectionHeading
             eyebrow="değerler"
             lines={["Neye inanıyoruz?"]}
-            description="Karar verirken ve kod yazarken aynı dört ilkeye dönüyoruz."
+            description="Karar verirken ve kod yazarken hep aynı yere dönüyoruz."
           />
 
           <ul className="mt-12 grid gap-px overflow-hidden rounded-[var(--radius-card)] border border-line bg-line sm:grid-cols-2">
