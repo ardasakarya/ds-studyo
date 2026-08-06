@@ -739,7 +739,8 @@ export function SceneNavigator() {
             soluk. */}
         <nav
           aria-label="Sahneler"
-          className="scene-pager pointer-events-auto absolute right-4 bottom-[5vh] sm:right-[23px] sm:bottom-[6vh]"
+          /* Dar ekranda liste dev başlığın hemen dibindeydi; aşağı çekildi. */
+          className="scene-pager pointer-events-auto absolute right-4 bottom-[2.5vh] sm:right-[23px] sm:bottom-[6vh]"
         >
           {scenes.map((scene, i) => (
             <button
