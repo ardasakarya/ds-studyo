@@ -488,7 +488,7 @@ export function SiteFooter() {
                 ))}
               </h2>
               <h2 className="footer-word">
-                {[..."Yazılım"].map((char, index) => (
+                {[..."Studio"].map((char, index) => (
                   <span key={`${char}-${index}`} className="footer-char">
                     {char}
                   </span>

@@ -3,19 +3,19 @@
  * Marka adı kesinleşince sadece burayı değiştir — site geneli günceller.
  */
 export const site = {
-  name: "D&S", // ŞİMDİLİK — marka adı kesinleşince değiştir
-  legalName: "D&S Yazılım",
-  domain: "monolit.com.tr", // TODO: alan adı alınınca değiştir
+  name: "Monlig",
+  legalName: "Monlig Studio",
+  domain: "monlig.com.tr", // TODO: alan adı alınınca değiştir
   /* Sitemap ve OG etiketlerinde kullanılan mutlak adres. GitHub Pages'te
      yayın adresi derleme sırasında NEXT_PUBLIC_SITE_URL ile veriliyor;
      kendi alan adınıza geçince aşağıdaki varsayılanı güncelleyin. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://monolit.com.tr",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://monlig.com.tr",
   tagline: "Fikirden canlıya, tek ekip.",
   description:
     "Web sitesi, mobil uygulama, e-ticaret ve kurumsal yazılım geliştiriyoruz. Kurucularla direkt çalışırsınız, kod tamamen sizin olur.",
   founded: 2024,
   contact: {
-    email: "merhaba@monolit.com.tr", // TODO
+    email: "merhaba@monlig.com.tr", // TODO
     phone: "+90 000 000 00 00", // TODO
     phoneHref: "tel:+900000000000", // TODO
     whatsapp: "https://wa.me/900000000000", // TODO
